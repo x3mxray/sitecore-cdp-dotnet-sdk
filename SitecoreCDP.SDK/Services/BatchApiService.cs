@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models;
 using SitecoreCDP.SDK.Models.Batch;
@@ -44,8 +45,6 @@ namespace SitecoreCDP.SDK.Services
                 var responseOnj = JsonSerializer.Deserialize<PreSignResponse>(putResponse);
                 if (responseOnj != null && responseOnj.Location != null && !string.IsNullOrEmpty(responseOnj.Location.Href))
                 {
-                    //textBoxBatchRef.Text = responseOnj.Location.Href;
-
                     HttpClient client = new();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 

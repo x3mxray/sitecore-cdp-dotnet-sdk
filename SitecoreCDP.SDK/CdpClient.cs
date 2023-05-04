@@ -1,5 +1,5 @@
-﻿using SitecoreCDP.SDK.Interfaces;
-using SitecoreCDP.SDK.Models;
+﻿using SitecoreCDP.SDK.Configuration;
+using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Services;
 
 namespace SitecoreCDP.SDK

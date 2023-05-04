@@ -3,6 +3,8 @@ using System.Net;
 using System.Text;
 using SitecoreCDP.SDK.Models;
 using System.Text.Json;
+using SitecoreCDP.SDK.Configuration;
+
 namespace SitecoreCDP.SDK.Services
 {
     public class BaseService
@@ -34,6 +36,18 @@ namespace SitecoreCDP.SDK.Services
         {
             var error = JsonSerializer.Deserialize<ErrorResponse>(response);
             return new HttpRequestException(error.Message, new Exception(error.DeveloperMessage), (HttpStatusCode)error.Status);
+        }
+
+        public async Task<TValue> GetCdpResponse<TValue>(HttpResponseMessage result)
+        {
+            var response = await result.Content.ReadAsStringAsync();
+            if (result.IsSuccessStatusCode)
+            {
+
+                return JsonSerializer.Deserialize<TValue>(response);
+            }
+
+            throw CdpException(response);
         }
     }
 }

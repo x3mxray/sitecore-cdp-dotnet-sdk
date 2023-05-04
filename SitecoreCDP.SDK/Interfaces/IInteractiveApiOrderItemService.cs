@@ -4,6 +4,7 @@ namespace SitecoreCDP.SDK.Interfaces
 {
     interface IInteractiveApiOrderItemService
     {
-        IEnumerable<OrderItem> Find(string orderRef);
+        Task<OrderItem> Get(string orderRef);
+        IAsyncEnumerable<OrderItem> Find(string orderRef);
     }
 }

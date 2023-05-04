@@ -4,9 +4,10 @@ namespace SitecoreCDP.SDK.Interfaces
 {
     interface IInteractiveApiGuestService
     {
-        Guest Get(string guestRef);
-        GuestContext Find(string email);
-        Guest Create(GuestCreate guest);
-        Guest Update(string guestRef, GuestCreate guest);
+        Task<Guest> Get(string guestRef);
+        Task<GuestContext> GetContext(string guestRef);
+        Task<GuestContext> Find(string email);
+        Task<Guest> Create(GuestCreate guest);
+        Task<Guest> Update(string guestRef, GuestCreate guest);
     }
 }

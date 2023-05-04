@@ -64,121 +64,15 @@ namespace SitecoreCDP.SDK
             using var file = File.CreateText(fileName);
             foreach (var batch in batches)
             {
-                file.WriteLine(JsonSerializer.Serialize(batch));
+                if (batch is BatchGuest guest)
+                {
+                    file.WriteLine(JsonSerializer.Serialize<BatchGuest>(guest));
+                }
+                else if (batch is BatchOrder order)
+                {
+                    file.WriteLine(JsonSerializer.Serialize<BatchOrder>(order));
+                }
             }
-        }
-
-        //static Faker<Guest>  GuestRule = new Faker<Guest>()
-        //.RuleFor(u => u.Gender, f => f.PickRandom<Gender>().ToString().ToLower())
-        //.RuleFor(u => u.FirstName, (f, u) => f.Name.FirstName(Enum.Parse<Name.Gender>(ToTitleCase(u.Gender))))
-        //.RuleFor(u => u.LastName, (f, u) => f.Name.LastName(Enum.Parse<Name.Gender>(ToTitleCase(u.Gender))))
-        //.RuleFor(u => u.Email, (f, u) => f.Internet.Email(u.FirstName, u.LastName).ToLower())
-        //.RuleFor(u => u.Phone, (f, u) => f.Phone.PhoneNumber("+966#########"))
-        //.RuleFor(u => u.Country, (f, u) => f.Address.CountryCode())
-        //.RuleFor(u => u.State, (f, u) => f.Address.State())
-        //.RuleFor(u => u.City, (f, u) => f.Address.City())
-        //.RuleFor(u => u.PostCode, (f, u) => f.Address.ZipCode())
-        //.RuleFor(u => u.FirstSeen, (f, u) => f.Date.Past().ToUniversalTime())
-        //.RuleFor(u => u.LastSeen, (f, u) => f.Date.Recent().ToUniversalTime())
-        //.RuleFor(u => u.PhoneNumbers, (f, u) => new List<string>{ u.Phone })
-        //;
-
-        //private static Faker<OrderItem> OrderItemRule = new Faker<OrderItem>()
-        //    .RuleFor(u => u.CurrencyCode, (f, u) => "AED")
-        //    .RuleFor(u => u.OriginalCurrencyCode, (f, u) => "AED")
-        //    .RuleFor(u => u.Price, (f, u) => decimal.Parse(f.Commerce.Price()))
-        //    .RuleFor(u => u.OriginalPrice, (f, u) => u.Price)
-        //    .RuleFor(u => u.Quantity, (f, u) => f.Random.Number(1, 3))
-        //    .RuleFor(u => u.Name, (f, u) => f.Commerce.ProductName())
-        //    .RuleFor(u => u.Description, (f, u) => f.Commerce.ProductDescription())
-        //    .RuleFor(u => u.ProductId, (f, u) => f.Commerce.Ean8())
-        //    .RuleFor(u => u.ReferenceId, (f, u) => u.ProductId)
-        //    .RuleFor(u => u.OrderedAt, (f, u) => f.Date.Recent().ToUniversalTime());
-
-        //private static Faker<Order> OrderRule = new Faker<Order>()
-        //    .RuleFor(u => u.CurrencyCode, (f, u) => "AED")
-        //    .RuleFor(u => u.ReferenceId, (f, u) => f.Commerce.Ean13())
-        //    .RuleFor(u => u.Channel, (f, u) => "OFFLINE")
-        //    .RuleFor(u => u.PaymentType, (f, u) => "Cash")
-        //    .RuleFor(u => u.PointOfSale, (f, u) => "x3mxray.demo.com")
-        //    .RuleFor(u => u.Status, (f, u) => "PURCHASED")
-        //    .RuleFor(u => u.OrderedAt, (f, u) => f.Date.Recent().ToUniversalTime());
-
-
-        //public static List<Order> GenerateOrders(int count = 3)
-        //{
-        //    var orders = OrderRule.Generate(count);
-        //    foreach (var order in orders)
-        //    {
-        //        order.OrderItems = OrderItemRule.Generate(2);
-        //        order.Price = order.OrderItems.Sum(x => x.Price * x.Quantity);
-        //        order.OrderedAt = order.OrderItems.Max(x => x.OrderedAt);
-        //        order.Contact = GenerateGuest();
-        //    }
-
-        //    return orders;
-        //}
-        //public static OrderItem GenerateOrderItem()
-        //{
-        //    var item = OrderItemRule.Generate();
-        //    return item;
-        //}
-
-        //public static Guest GenerateGuest()
-        //{
-        //    var guest = GuestRule.Generate();
-        //    guest.Identifiers = new List<Identifier>
-        //    {
-        //        new()
-        //        {
-        //            Provider = "email",
-        //            Id = guest.Email
-        //        },
-        //        new()
-        //        {
-        //            Provider = "phone",
-        //            Id = guest.Phone
-        //        }
-        //    };
-        //    guest.Extensions = new List<Extension>
-        //    {
-        //        new()
-        //    };
-        //    return guest;
-        //}
-
-        //public static List<Guest> GenerateGuests(int count=3)
-        //{
-        //    var guests = GuestRule.Generate(count);
-        //    foreach (var guest in guests)
-        //    {
-        //        guest.Identifiers = new List<Identifier>
-        //        {
-        //            new()
-        //            {
-        //                Provider = "email",
-        //                Id = guest.Email
-        //            },
-        //            new()
-        //            {
-        //                Provider = "phone",
-        //                Id = guest.Phone
-        //            }
-        //        };
-        //        guest.Extensions = new List<Extension>
-        //        {
-        //            new()
-        //        };
-        //    }
-            
-        //    return guests;
-        //}
-
-        public static string ToTitleCase(string str)
-        {
-            var firstword = System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(str.Split(' ')[0].ToLower());
-            str = str.Replace(str.Split(' ')[0], firstword);
-            return str;
         }
     }
 }

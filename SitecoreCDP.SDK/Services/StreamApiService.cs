@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
-using SitecoreCDP.SDK.Models;
 
 namespace SitecoreCDP.SDK.Services
 {
