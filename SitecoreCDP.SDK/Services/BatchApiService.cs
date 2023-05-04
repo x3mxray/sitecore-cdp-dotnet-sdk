@@ -18,17 +18,17 @@ namespace SitecoreCDP.SDK.Services
     {
         public BatchApiService(CdpClientConfig cdpClientConfig) : base(cdpClientConfig)
         {
-           
+
         }
 
-        public string Upload(List<Batch> batches, string tempJsonfileName)
+        public async Task<string> Upload(List<Batch> batches, string tempJsonfileName)
         {
             string uniqueId = Guid.NewGuid().ToString();
             var jsonName = tempJsonfileName;
 
             Helpers.ExportToJson(jsonName, batches);
 
-            
+
             var gzip = Helpers.CompressFile(jsonName);
             var md5 = Helpers.Md5Hash(gzip);
 
@@ -43,48 +43,38 @@ namespace SitecoreCDP.SDK.Services
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
 
             var uri = new Uri(Endpoints.Batch.PresignedRequest(uniqueId));
-            var result = _httpClient.PutAsync(uri, content).Result;
-            if (result.IsSuccessStatusCode)
+            var result = await _httpClient.PutAsync(uri, content);
+            var response = await GetCdpResponse<PreSignResponse>(result);
+            if (!string.IsNullOrEmpty(response.Location.Href))
             {
-                var putResponse = result.Content.ReadAsStringAsync().Result;
-                var responseOnj = JsonSerializer.Deserialize<PreSignResponse>(putResponse);
-                if (responseOnj != null && responseOnj.Location != null && !string.IsNullOrEmpty(responseOnj.Location.Href))
+                HttpClient client = new();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpRequestMessage requestMessage = new(HttpMethod.Put, new Uri(response.Location.Href));
+
+                requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
+
+                requestMessage.Content = new ByteArrayContent(File.ReadAllBytes(gzip));
+                requestMessage.Content.Headers.ContentMD5 = md5;
+
+                HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
+
+                if (!responseMessage.IsSuccessStatusCode)
                 {
-                    HttpClient client = new();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                    throw CdpException(errorMessage);
 
-                    HttpRequestMessage requestMessage = new(HttpMethod.Put, new Uri(responseOnj.Location.Href));
-
-                    requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
-
-                    requestMessage.Content = new ByteArrayContent(File.ReadAllBytes(gzip));
-                    requestMessage.Content.Headers.ContentMD5 = md5;
-
-                    HttpResponseMessage responseMessage = client.SendAsync(requestMessage).Result;
-
-                    if (!responseMessage.IsSuccessStatusCode)
-                    {
-                        var response = responseMessage.Content.ReadAsStringAsync().Result;
-                        throw CdpException(response);
-
-                    }
-                   
                 }
+
             }
             return uniqueId;
         }
 
-        public BatchUploadResponse CheckStatus(string batchRef)
+        public async Task<BatchUploadResponse> CheckStatus(string batchRef)
         {
             var uri = new Uri(Endpoints.Batch.CheckStatus(batchRef));
-            var result = _httpClient.GetAsync(uri).Result;
-            var response = result.Content.ReadAsStringAsync().Result;
-            if (result.IsSuccessStatusCode)
-            {
-                return JsonSerializer.Deserialize<BatchUploadResponse>(response);
-            }
-
-            throw CdpException(response);
+            var result = await _httpClient.GetAsync(uri);
+            return await GetCdpResponse<BatchUploadResponse>(result);
         }
 
         public List<BatchLog> DownloadBatchLog(string uri, string tempGzipName)
@@ -95,7 +85,7 @@ namespace SitecoreCDP.SDK.Services
             using var wc = new WebClient();
             wc.DownloadFile(uri, tempGzipName);
             var jsonFileName = tempGzipName.Replace(".gz", ".json");
-            using (Stream input = new GZipStream(File.OpenRead(tempGzipName),CompressionMode.Decompress))
+            using (Stream input = new GZipStream(File.OpenRead(tempGzipName), CompressionMode.Decompress))
             {
                 using (var output = File.Create(jsonFileName))
                 {
@@ -133,7 +123,7 @@ namespace SitecoreCDP.SDK.Services
             var decompress = Helpers.DecompressFile(data);
             string text = System.Text.Encoding.ASCII.GetString(decompress);
             string[] jsonEntries = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
-          
+
             List<BatchLog> result = new();
             foreach (var jsonEntry in jsonEntries)
             {
