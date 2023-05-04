@@ -12,11 +12,13 @@ namespace SitecoreCDP.SDK
 {
     public class CdpClient: ICdpClient
     {
+        public IAudienceSyncApiService AudienceSyncApi { get; }
         public IBatchApiService BatchApi { get; }
         public IInteractiveApiService InteractiveApi { get; }
         public IStreamApiService StreamApi { get; }
         public CdpClient(CdpClientConfig cdpClientConfig)
         {
+            AudienceSyncApi = new AudienceSyncApiService(cdpClientConfig);
             BatchApi = new BatchApiService(cdpClientConfig);
             InteractiveApi = new InteractiveApiService(cdpClientConfig);
             StreamApi = new StreamApiService(cdpClientConfig);

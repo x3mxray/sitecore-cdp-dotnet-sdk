@@ -48,6 +48,13 @@ public static class Endpoints
         public static string CheckStatus(string batchRef) => $"{BaseUrl}/{Version}/batches/{batchRef}";
     }
 
+    public static class AudienceSync
+    {
+        public static string Trigger => $"{BaseUrl}/{Version}/batchFlowsTrigger";
+        public static string Status(string batchJobRef) => $"{BaseUrl}/{Version}/batchFlowsJob/{batchJobRef}";
+        public static string GetFiles(string batchJobRef) => $"{BaseUrl}/{Version}/batchFlowsJob/{batchJobRef}/files";
+    }
+
     public static class Stream
     {
 

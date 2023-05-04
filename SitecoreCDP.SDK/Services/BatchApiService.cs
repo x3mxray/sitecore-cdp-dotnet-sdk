@@ -10,7 +10,6 @@ using System.Net.Http.Headers;
 using System.Text.Json;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
-using SitecoreCDP.SDK.Models;
 using SitecoreCDP.SDK.Models.Batch;
 
 namespace SitecoreCDP.SDK.Services
@@ -88,15 +87,15 @@ namespace SitecoreCDP.SDK.Services
             throw CdpException(response);
         }
 
-        public List<BatchLog> DownloadBatchLog(string uri, string tempGzfileName)
+        public List<BatchLog> DownloadBatchLog(string uri, string tempGzipName)
         {
-            if (string.IsNullOrEmpty(tempGzfileName))
+            if (string.IsNullOrEmpty(tempGzipName))
                 return DownloadBatchLogInMemory(uri);
 
             using var wc = new WebClient();
-            wc.DownloadFile(uri, tempGzfileName);
-            var jsonFileName = tempGzfileName.Replace(".gz", ".json");
-            using (Stream input = new GZipStream(File.OpenRead(tempGzfileName),CompressionMode.Decompress))
+            wc.DownloadFile(uri, tempGzipName);
+            var jsonFileName = tempGzipName.Replace(".gz", ".json");
+            using (Stream input = new GZipStream(File.OpenRead(tempGzipName),CompressionMode.Decompress))
             {
                 using (var output = File.Create(jsonFileName))
                 {

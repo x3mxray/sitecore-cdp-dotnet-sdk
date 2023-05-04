@@ -6,7 +6,7 @@
 // <date>2023-5-4</date>
 using SitecoreCDP.SDK.Models.Common;
 
-namespace SitecoreCDP.SDK.Models
+namespace SitecoreCDP.SDK.Models.Batch
 {
     public class PreSignRequest
     {
