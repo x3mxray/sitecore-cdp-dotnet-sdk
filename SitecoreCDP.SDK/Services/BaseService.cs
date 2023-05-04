@@ -1,4 +1,10 @@
-﻿using System.Net.Http.Headers;
+﻿// <copyright file="BaseService.cs" company="Brimit">
+// Copyright (c) 2023 All Rights Reserved.
+// </copyright>
+// <author>Sergey Baranov @x3mxray</author>
+// <project>SitecoreCDP.SDK</project>
+// <date>2023-5-4</date>
+using System.Net.Http.Headers;
 using System.Net;
 using System.Text;
 using SitecoreCDP.SDK.Models;
@@ -23,7 +29,7 @@ namespace SitecoreCDP.SDK.Services
         public BaseService(CdpClientConfig cdpClientConfig)
         {
             _cdpClientConfig = cdpClientConfig;
-            Endpoints.ApiEndpoint = _cdpClientConfig.ApiEndpoint;
+            Endpoints.BaseUrl = _cdpClientConfig.BaseUrl;
             Endpoints.Version = _cdpClientConfig.Version;
         }
 

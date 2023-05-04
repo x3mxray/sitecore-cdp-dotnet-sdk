@@ -1,4 +1,10 @@
-﻿using System.IO.Compression;
+﻿// <copyright file="BatchApiService.cs" company="Brimit">
+// Copyright (c) 2023 All Rights Reserved.
+// </copyright>
+// <author>Sergey Baranov @x3mxray</author>
+// <project>SitecoreCDP.SDK</project>
+// <date>2023-5-4</date>
+using System.IO.Compression;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text.Json;
@@ -16,7 +22,7 @@ namespace SitecoreCDP.SDK.Services
            
         }
 
-        public string Upload(string tempJsonfileName, List<Batch> batches)
+        public string Upload(List<Batch> batches, string tempJsonfileName)
         {
             string uniqueId = Guid.NewGuid().ToString();
             var jsonName = tempJsonfileName;
@@ -82,8 +88,11 @@ namespace SitecoreCDP.SDK.Services
             throw CdpException(response);
         }
 
-        public List<BatchLog> DownloadBatchLog(string tempGzfileName, string uri)
+        public List<BatchLog> DownloadBatchLog(string uri, string tempGzfileName)
         {
+            if (string.IsNullOrEmpty(tempGzfileName))
+                return DownloadBatchLogInMemory(uri);
+
             using var wc = new WebClient();
             wc.DownloadFile(uri, tempGzfileName);
             var jsonFileName = tempGzfileName.Replace(".gz", ".json");
@@ -117,7 +126,7 @@ namespace SitecoreCDP.SDK.Services
             return result;
         }
 
-        public List<BatchLog> DownloadBatchLogInMemory(string uri)
+        List<BatchLog> DownloadBatchLogInMemory(string uri)
         {
             using var wc = new WebClient();
             wc.Headers[HttpRequestHeader.AcceptEncoding] = "gzip";
