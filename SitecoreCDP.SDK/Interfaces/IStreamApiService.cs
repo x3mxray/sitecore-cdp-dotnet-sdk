@@ -4,19 +4,20 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
-namespace SitecoreCDP.SDK.Interfaces;
-
-/// <summary>
-/// The Stream API is used to send real-time behavioral and transactional data about the users of your application to Sitecore CDP.
-/// </summary>
-public interface IStreamApiService
+namespace SitecoreCDP.SDK.Interfaces
 {
-    string CreateNewSession();
-    bool KillSession();
+    /// <summary>
+    /// The Stream API is used to send real-time behavioral and transactional data about the users of your application to Sitecore CDP.
+    /// </summary>
+    public interface IStreamApiService
+    {
+        string CreateNewSession();
+        bool KillSession();
 
-    void RunExperiment(string friendlyId);
+        void RunExperiment(string friendlyId);
 
-    void TrackEvent(string eventName = "VIEW");
+        void TrackEvent(string eventName = "VIEW");
 
-    void IdentifyUser(string provider, string identifier);
+        void IdentifyUser(string provider, string identifier);
+    }
 }

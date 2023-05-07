@@ -4,11 +4,15 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
+
+using System;
 using System.Net.Http.Headers;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using SitecoreCDP.SDK.Models;
 using System.Text.Json;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 
 namespace SitecoreCDP.SDK.Services
@@ -16,7 +20,7 @@ namespace SitecoreCDP.SDK.Services
     public class BaseService
     {
         private readonly CdpClientConfig _cdpClientConfig;
-        public HttpClient _httpClient => new() { DefaultRequestHeaders = { Authorization = AuthHeader } };
+        public HttpClient _httpClient => new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeader } };
         public AuthenticationHeaderValue AuthHeader
         {
             get
@@ -41,7 +45,7 @@ namespace SitecoreCDP.SDK.Services
         public HttpRequestException CdpException(string response)
         {
             var error = JsonSerializer.Deserialize<ErrorResponse>(response);
-            return new HttpRequestException(error.Message, new Exception(error.DeveloperMessage), (HttpStatusCode)error.Status);
+            return new HttpRequestException(error.Message, new Exception(error.DeveloperMessage));
         }
 
         public async Task<TValue> GetCdpResponse<TValue>(HttpResponseMessage result)

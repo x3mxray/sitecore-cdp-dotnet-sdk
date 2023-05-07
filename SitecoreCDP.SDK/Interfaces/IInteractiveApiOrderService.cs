@@ -4,6 +4,9 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
+
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Models.Interactive;
 
 namespace SitecoreCDP.SDK.Interfaces

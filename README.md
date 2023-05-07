@@ -115,14 +115,14 @@ In progress.
 Yes. The SDK uses `HttpClient`, which does not support synchronous calls (and for good reason). Do _not_ use `.Result` or `.Wait()` on calls made with this SDK, ever. These will block threads and potentially cause deadlocks. In short, [don't block on async code](https://blog.stephencleary.com/2012/07/dont-block-on-async-code.html). Use `await`.
 
 ## Supported Platforms
-The SDK targets net7.0 at this moment (will be rebuid with .NET Framework 4x and .NET Standard 2.x to make it compatible with almost all .NET solutions.
+The SDK is available with .NET 7.0, .NET Framework 4.6.x and .NET Standard 2.x that makes it compatible with almost all .NET solutions.
 
 ## Getting Help
-For programming questions you can ask me in Sitecore Slack channels @@x3mxray.
+For programming questions you can ask me in Sitecore Slack channels @x3mxray.
 
 To report a bug or request a feature specific to the SDK, please open an [issue](https://github.com/x3mxray/sitecore-cdp-dotnet-sdk/issues/new). 
 
-## Helpful Links
+## Helpful Resources
 - [CDP Integrations - Developer Portal](https://developers.sitecore.com/learn/integrations)
 - [Sitecore CDP developer documentation](https://doc.sitecore.com/cdp/en/developers/api/index-en.html)
 - [Dylan Young: JS SDK/API spec/Postman collection](https://github.com/dylanyoung-dev?tab=repositories)

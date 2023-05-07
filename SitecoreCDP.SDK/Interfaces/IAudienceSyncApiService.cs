@@ -5,6 +5,8 @@
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
 
+using System;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Models.Batch;
 
 namespace SitecoreCDP.SDK.Interfaces

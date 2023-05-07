@@ -4,11 +4,17 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models.Batch;
@@ -27,7 +33,7 @@ namespace SitecoreCDP.SDK.Services
             var gzip = gzipFileName;
             var md5 = Helpers.Md5Hash(gzip);
 
-            PreSignRequest request = new()
+            PreSignRequest request = new PreSignRequest()
             {
                 checksum = Helpers.CheckSum(md5),
                 size = new FileInfo(gzip).Length
@@ -42,10 +48,10 @@ namespace SitecoreCDP.SDK.Services
             var response = await GetCdpResponse<PreSignResponse>(result);
             if (!string.IsNullOrEmpty(response.Location.Href))
             {
-                HttpClient client = new();
+                HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpRequestMessage requestMessage = new(HttpMethod.Put, new Uri(response.Location.Href));
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Put, new Uri(response.Location.Href));
 
                 requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
 
@@ -71,7 +77,7 @@ namespace SitecoreCDP.SDK.Services
             var gzip = Helpers.CompressFile(jsonFileName);
             var md5 = Helpers.Md5Hash(gzip);
 
-            PreSignRequest request = new()
+            PreSignRequest request = new PreSignRequest()
             {
                 checksum = Helpers.CheckSum(md5),
                 size = new FileInfo(gzip).Length
@@ -86,10 +92,10 @@ namespace SitecoreCDP.SDK.Services
             var response = await GetCdpResponse<PreSignResponse>(result);
             if (!string.IsNullOrEmpty(response.Location.Href))
             {
-                HttpClient client = new();
+                HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpRequestMessage requestMessage = new(HttpMethod.Put, new Uri(response.Location.Href));
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Put, new Uri(response.Location.Href));
 
                 requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
 
@@ -120,7 +126,7 @@ namespace SitecoreCDP.SDK.Services
             var gzip = Helpers.CompressFile(jsonName);
             var md5 = Helpers.Md5Hash(gzip);
 
-            PreSignRequest request = new()
+            PreSignRequest request = new PreSignRequest()
             {
                 checksum = Helpers.CheckSum(md5),
                 size = new FileInfo(gzip).Length
@@ -135,10 +141,10 @@ namespace SitecoreCDP.SDK.Services
             var response = await GetCdpResponse<PreSignResponse>(result);
             if (!string.IsNullOrEmpty(response.Location.Href))
             {
-                HttpClient client = new();
+                HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                HttpRequestMessage requestMessage = new(HttpMethod.Put, new Uri(response.Location.Href));
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Put, new Uri(response.Location.Href));
 
                 requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
 
@@ -195,7 +201,7 @@ namespace SitecoreCDP.SDK.Services
             }
 
             var jsonEntries = File.ReadAllLines(jsonFileName);
-            List<BatchLog> result = new();
+            List<BatchLog> result = new List<BatchLog>();
             foreach (var jsonEntry in jsonEntries)
             {
                 result.Add(JsonSerializer.Deserialize<BatchLog>(jsonEntry));
@@ -210,9 +216,9 @@ namespace SitecoreCDP.SDK.Services
             var data = await wc.DownloadDataTaskAsync(uri);
             var decompress = Helpers.DecompressFile(data);
             string text = System.Text.Encoding.ASCII.GetString(decompress);
-            string[] jsonEntries = text.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+            string[] jsonEntries = text.Split(new []{Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries);
 
-            List<BatchLog> result = new();
+            List<BatchLog> result = new List<BatchLog>();
             foreach (var jsonEntry in jsonEntries)
             {
                 result.Add(JsonSerializer.Deserialize<BatchLog>(jsonEntry));

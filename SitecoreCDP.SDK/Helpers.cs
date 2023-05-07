@@ -4,6 +4,10 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text.Json;

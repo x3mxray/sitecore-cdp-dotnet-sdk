@@ -4,8 +4,14 @@
 // <author>Sergey Baranov @x3mxray</author>
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models.Interactive;
@@ -49,7 +55,7 @@ namespace SitecoreCDP.SDK.Services
                 var obj = JsonSerializer.Deserialize<FindResponse>(response);
                 foreach (var order in obj.Items)
                 {
-                    var href = order.Href.Split("/").Last();
+                    var href = order.Href.Split('/').Last();
                     yield return await Get(href);
                 }
             }
@@ -81,7 +87,7 @@ namespace SitecoreCDP.SDK.Services
                 var obj = JsonSerializer.Deserialize<FindResponse>(response);
                 foreach (var order in obj.Items)
                 {
-                    var href = order.Href.Split("/").Last();
+                    var href = order.Href.Split('/').Last();
                     yield return await Get(href);
                 }
             }
@@ -132,7 +138,7 @@ namespace SitecoreCDP.SDK.Services
             if (result.IsSuccessStatusCode)
             {
                 var obj = JsonSerializer.Deserialize<FindResponse>(response);
-                var href = obj.Items[0].Href.Split("/").Last();
+                var href = obj.Items[0].Href.Split('/').Last();
                 return await GetContext(href);
             }
 

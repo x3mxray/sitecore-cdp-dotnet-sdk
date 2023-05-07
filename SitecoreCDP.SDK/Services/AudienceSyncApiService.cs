@@ -1,6 +1,9 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models.Batch;
@@ -11,7 +14,7 @@ namespace SitecoreCDP.SDK.Services
     {
         public async Task<TriggerResponse> Trigger(string flowRef, string segmentRef, DateTime datasetDate)
         {
-            TriggerReguest request = new()
+            TriggerReguest request = new TriggerReguest()
             {
                 flowRef = flowRef,
                 segmentRef = segmentRef,
