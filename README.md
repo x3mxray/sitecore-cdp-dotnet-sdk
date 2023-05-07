@@ -8,13 +8,13 @@ The unofficial .Net SDK for Sitecore CDP/Personalize
 - [Available services](#available-services)
     - [Batch API](#batch-api)
 	- [AudienceSync API](#audiencesync-api)
-    - [Interactive API (REST)](#interactive-api)
+    - [Interactive API (REST)](#interactive-api-rest)
     - [Stream API](#stream-api)
     - [Tenant API](#tenant-api)
 - [FAQ](#faq)
 - [Supported Platforms](#supported-platforms)
 - [Getting Help](#getting-help)	
-- [Helpful Links](#helpful links)	
+- [Helpful Links](#helpful-links)	
 
 ## Example
 ```c#
@@ -46,12 +46,12 @@ if (status.Status.Code == BatchStatusCode.Error)
 ```
 
 ## Available services
-At this moment `Batch API`, `Interactive API` and `Audience Sync` are ready. `Stream API` and `Tenant API` are in progress.
+At this moment *Batch API*, *Interactive API* and *Audience Sync* are ready. *Stream API* and *Tenant API* are in progress.
 
 ### Batch API
 Batch API is used to upload guests, orders, and tracking events. The are 3 types of supported import formats:
 - Model based: 
-```
+```c#
 var batchRef = await cdpClient.BatchApi.Upload(new List<Batch>
 {
     new BatchGuest { Guest = new Guest() {/* populate fields */ } },
@@ -60,15 +60,15 @@ var batchRef = await cdpClient.BatchApi.Upload(new List<Batch>
 });
 ```
 - JSON file:
-```
+```c#
 var batchRef = await cdpClient.BatchApi.UploadJson("import.json");
 ```
 - GZip file:
-```
+```c#
 var batchRef = await cdpClient.BatchApi.UploadGZip("import.json.gz");
 ```
 Check batch import status and download error log in strongly typed records:
-```
+```c#
 // check status
 var status = await cdpClient.BatchApi.CheckStatus(batchRef);
 if (status.Status.Code == BatchStatusCode.Error)
@@ -81,7 +81,7 @@ if (status.Status.Code == BatchStatusCode.Error)
 
 ### AudienceSync API
 AudienceSync REST API to trigger and retrieve batch jobs, download output files.
-```
+```c#
 var triggerResponse = await cdpClient.AudienceSyncApi.Trigger(flowRef, segmentRef, datasetDate);
 
 var jobStatus = await cdpClient.AudienceSyncApi.CheckStatus(triggerResponse.Ref);
@@ -99,7 +99,7 @@ if (jobStatus.Status == TriggerResponseStatus.Success)
 
 ### Stream API
 In progress.
-```
+```c#
 await cdpClient.StreamApi.RunExperiment(friendlyId);
 await cdpClient.StreamApi.IdentifyUser(new IdentityEvent{});
 await cdpClient.StreamApi.TrackEvent(new Event{});
