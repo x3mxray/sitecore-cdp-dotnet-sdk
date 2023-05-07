@@ -21,5 +21,6 @@ namespace SitecoreCDP.SDK.Interfaces
         /// The Stream API is used to send real-time behavioral and transactional data about the users of your application to Sitecore CDP.
         /// </summary>
         IStreamApiService StreamApi { get; }
+        public IAudienceSyncApiService AudienceSyncApi { get; }
     }
 }
