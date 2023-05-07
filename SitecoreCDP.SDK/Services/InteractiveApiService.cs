@@ -9,6 +9,7 @@ using System.Text.Json;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models.Interactive;
+using static SitecoreCDP.SDK.Configuration.Endpoints.Interactive;
 using Guest = SitecoreCDP.SDK.Models.Interactive.Guest;
 using Order = SitecoreCDP.SDK.Models.Interactive.Order;
 using OrderItem = SitecoreCDP.SDK.Models.Interactive.OrderItem;
@@ -19,11 +20,13 @@ namespace SitecoreCDP.SDK.Services
     internal class InteractiveApiService: BaseService, IInteractiveApiService
     {
         public InteractiveApiGuestService Guests { get; }
+        public InteractiveApiGuestExtensionsService GuestExtensions { get; }
         public InteractiveApiOrderService Orders { get; }
         public InteractiveApiOrderItemService OrderItems { get; }
         public InteractiveApiService(CdpClientConfig cdpClientConfig) : base(cdpClientConfig)
         {
             Guests = new InteractiveApiGuestService(cdpClientConfig);
+            GuestExtensions = new InteractiveApiGuestExtensionsService(cdpClientConfig);
             Orders = new InteractiveApiOrderService(cdpClientConfig);
             OrderItems = new InteractiveApiOrderItemService(cdpClientConfig);
         }

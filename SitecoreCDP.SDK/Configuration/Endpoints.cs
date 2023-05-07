@@ -25,6 +25,13 @@ public static class Endpoints
             public static string Update(string guestRef) => $"{BaseUrl}/{Version}/guests/{guestRef}";
         }
 
+        public static class GuestExtensions
+        {
+            public static string Find(string guestRef, string extName) => $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}";
+            public static string Get(string guestRef, string extName, string guestExtensionRef) => $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}/{guestExtensionRef}";
+            public static string Delete(string guestRef, string extName, string guestExtRef) => $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}/{guestExtRef}";
+        }
+
         public static class Order
         {
             public static string Get(string orderRef) => $"{BaseUrl}/{Version}/orders/{orderRef}";

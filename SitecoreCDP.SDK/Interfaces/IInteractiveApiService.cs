@@ -17,6 +17,11 @@ namespace SitecoreCDP.SDK.Interfaces
         ///  Guests service
         /// </summary>
         public InteractiveApiGuestService Guests { get; }
+
+        /// <summary>
+        /// Guest Data Extensions service
+        /// </summary>
+        public InteractiveApiGuestExtensionsService GuestExtensions { get; }
         /// <summary>
         /// Orders service
         /// </summary>

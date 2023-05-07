@@ -12,6 +12,9 @@ namespace SitecoreCDP.SDK.Models.Interactive
     {
         [JsonPropertyName("orders")]
         public List<OrderContext> Orders { get; set; }
+
+        [JsonPropertyName("dataExtensions")]
+        public List<GuestDataExtension> DataExtensions { get; set; }
     }
 
     public class OrderContext : Order
