@@ -118,7 +118,7 @@ Yes. The SDK uses `HttpClient`, which does not support synchronous calls (and fo
 The SDK targets net7.0 at this moment (will be rebuid with .NET Framework 4x and .NET Standard 2.x to make it compatible with almost all .NET solutions.
 
 ## Getting Help
-For programming questions you can ask me in Sitecore Slack channels @@x3mxray.
+For programming questions you can ask me in Sitecore Slack channels @x3mxray.
 
 To report a bug or request a feature specific to the SDK, please open an [issue](https://github.com/x3mxray/sitecore-cdp-dotnet-sdk/issues/new). 
 
