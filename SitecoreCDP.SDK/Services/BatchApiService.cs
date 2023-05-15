@@ -70,7 +70,48 @@ namespace SitecoreCDP.SDK.Services
             }
             return uniqueId;
         }
+        public async Task<string> UploadGZip(byte[] gzipFileBytes)
+        {
+            string uniqueId = Guid.NewGuid().ToString();
+            var md5 = Helpers.Md5Hash(gzipFileBytes);
 
+            PreSignRequest request = new PreSignRequest()
+            {
+                checksum = Helpers.CheckSum(md5),
+                size = gzipFileBytes.Length
+            };
+
+            var textContent = JsonSerializer.Serialize(request);
+            using var content = new StringContent(textContent);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+            var uri = new Uri(Endpoints.Batch.PresignedRequest(uniqueId));
+            var result = await _httpClient.PutAsync(uri, content);
+            var response = await GetCdpResponse<PreSignResponse>(result);
+            if (!string.IsNullOrEmpty(response.Location.Href))
+            {
+                HttpClient client = new HttpClient();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Put, new Uri(response.Location.Href));
+
+                requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
+
+                requestMessage.Content = new ByteArrayContent(gzipFileBytes);
+                requestMessage.Content.Headers.ContentMD5 = md5;
+
+                HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
+
+                if (!responseMessage.IsSuccessStatusCode)
+                {
+                    var errorMessage = await responseMessage.Content.ReadAsStringAsync();
+                    throw CdpException(errorMessage);
+
+                }
+
+            }
+            return uniqueId;
+        }
         public async Task<string> UploadJson(byte[] jsonFile)
         {
             string uniqueId = Guid.NewGuid().ToString();

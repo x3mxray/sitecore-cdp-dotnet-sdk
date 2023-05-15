@@ -26,7 +26,12 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="jsonFileName">Path to json file to upload.</param>
         /// <returns></returns>
         Task<string> UploadJson(string jsonFileName);
-
+        /// <summary>
+        /// Prepare and upload the gzipped batch file.
+        /// </summary>
+        /// <param name="gzipFileBytes">Gzip file in bytes.</param>
+        /// <returns></returns>
+        Task<string> UploadGZip(byte[] gzipFileBytes);
         /// <summary>
         /// Prepare and upload the gzipped batch file.
         /// </summary>

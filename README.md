@@ -1,6 +1,6 @@
 # Sitecore CDP/Personalize SDK for .NET
 
-[![SitecoreCDP.SDK](https://img.shields.io/nuget/v/SitecoreCDP.SDK.svg?maxAge=3600)](https://www.nuget.org/packages/SitecoreCDP.SDK/)
+[![SitecoreCDP.SDK](https://img.shields.io/nuget/v/SitecoreCDP.SDK.svg?maxAge=3600)](https://www.nuget.org/packages/SitecoreCDP.SDK/) [![Downloads](https://img.shields.io/nuget/dt/SitecoreCDP.SDK.svg)](https://www.nuget.org/packages/SitecoreCDP.SDK/)
 
 The unofficial .Net SDK for Sitecore CDP/Personalize
 
@@ -61,11 +61,19 @@ var batchRef = await cdpClient.BatchApi.Upload(new List<Batch>
 ```
 - JSON file:
 ```c#
+// by file name
 var batchRef = await cdpClient.BatchApi.UploadJson("import.json");
+
+// by file stream 
+var batchRef = await cdpClient.BatchApi.UploadJson(jsonFileBytes);
 ```
 - GZip file:
 ```c#
+// by file name
 var batchRef = await cdpClient.BatchApi.UploadGZip("import.json.gz");
+
+// by file stream 
+var batchRef = await cdpClient.BatchApi.UploadJson(gzFileBytes);
 ```
 Check batch import status and download error log in strongly typed records:
 ```c#
