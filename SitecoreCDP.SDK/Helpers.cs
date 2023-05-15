@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.IO.Pipes;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Nodes;
@@ -23,6 +24,11 @@ namespace SitecoreCDP.SDK
 {
     public static class Helpers
     {
+        public static byte[] Md5Hash(byte[] file)
+        {
+            using var md5 = MD5.Create();
+            return md5.ComputeHash(file);
+        }
         public static byte[] Md5Hash(string file)
         {
             using var md5 = MD5.Create();
@@ -40,6 +46,11 @@ namespace SitecoreCDP.SDK
             return new FileInfo(file).Length;
         }
 
+        public static long FileSize(Stream fileStream)
+        {
+            return fileStream.Length;
+        }
+
         public static string CompressFile(string file)
         {
             var gzip = file.Replace(".json", ".gz");
@@ -48,6 +59,22 @@ namespace SitecoreCDP.SDK
             using var compressor = new GZipStream(compressedFileStream, CompressionMode.Compress);
             originalFileStream.CopyTo(compressor);
             return gzip;
+        }
+
+        public static byte[] CompressFile(byte[] file)
+        {
+            using (MemoryStream input = new MemoryStream(file))
+            {
+                using (MemoryStream output = new MemoryStream())
+                {
+                    using (GZipStream compression = new GZipStream(output, CompressionMode.Compress))
+                    {
+                        input.CopyTo(compression);
+                        return output.ToArray();
+                    }
+                }
+            }
+            
         }
 
         public static byte[] DecompressFile(byte[] gzip)

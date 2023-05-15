@@ -20,7 +20,7 @@ namespace SitecoreCDP.SDK.Services
     public class BaseService
     {
         private readonly CdpClientConfig _cdpClientConfig;
-        public HttpClient _httpClient => new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeader } };
+        public HttpClient _httpClient => new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeader} };
         public AuthenticationHeaderValue AuthHeader
         {
             get

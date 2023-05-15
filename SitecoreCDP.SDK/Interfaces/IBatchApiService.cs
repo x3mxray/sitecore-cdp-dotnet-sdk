@@ -6,6 +6,7 @@
 // <date>2023-5-4</date>
 
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using SitecoreCDP.SDK.Models.Batch;
 
@@ -26,6 +27,12 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <returns></returns>
         Task<string> UploadJson(string jsonFileName);
 
+        /// <summary>
+        /// Prepare and upload the gzipped batch file.
+        /// </summary>
+        /// <param name="jsonFile">Json file in bytes.</param>
+        /// <returns></returns>
+        Task<string> UploadJson(byte[] jsonFile);
         /// <summary>
         /// Upload the gzipped batch file.
         /// </summary>

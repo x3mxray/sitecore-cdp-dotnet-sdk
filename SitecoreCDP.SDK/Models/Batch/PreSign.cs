@@ -5,6 +5,7 @@
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
 using SitecoreCDP.SDK.Models.Common;
+using System.Text.Json.Serialization;
 
 namespace SitecoreCDP.SDK.Models.Batch
 {
@@ -15,6 +16,7 @@ namespace SitecoreCDP.SDK.Models.Batch
     }
     public class PreSignResponse
     {
+        [JsonPropertyName("location")]
         public Hreference Location { get; set; }
     }
 }

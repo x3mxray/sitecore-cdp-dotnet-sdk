@@ -35,6 +35,9 @@ namespace SitecoreCDP.SDK.Configuration
                 public static string Find(string guestRef, string extName) =>
                     $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}";
 
+                public static string CreateOrUpdate(string guestRef, string extName) =>
+                    $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}";
+
                 public static string Get(string guestRef, string extName, string guestExtensionRef) =>
                     $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}/{guestExtensionRef}";
 

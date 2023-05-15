@@ -24,5 +24,6 @@ namespace SitecoreCDP.SDK.Interfaces
         Task<FindResponse> Find(string guestRef, string extName);
 
         Task<GuestDataExtension> Get(string guestRef, string extName, string extensionRef);
+        Task<DataExtensionResponse> CreateOrUpdate<T>(string guestRef, string extName, T model);
     }
 }

@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Models.Interactive;
-using static SitecoreCDP.SDK.Configuration.Endpoints.Interactive;
 using Guest = SitecoreCDP.SDK.Models.Interactive.Guest;
 using Order = SitecoreCDP.SDK.Models.Interactive.Order;
 using OrderItem = SitecoreCDP.SDK.Models.Interactive.OrderItem;

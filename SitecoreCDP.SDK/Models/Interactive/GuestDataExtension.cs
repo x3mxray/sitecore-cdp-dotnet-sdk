@@ -7,6 +7,27 @@ using System.Threading.Tasks;
 
 namespace SitecoreCDP.SDK.Models.Interactive
 {
+    public abstract class DataExtension
+    {
+        [JsonPropertyName("key")]
+        public string Key { get; set; }
+    }
+
+    public class DataExtensionResponse : DataExtension
+    {
+        [JsonPropertyName("href")]
+        public string Href { get; set; }
+
+        [JsonPropertyName("ref")]
+        public string Ref { get; set; }
+
+        [JsonPropertyName("createdAt")]
+        public DateTime CreatedAt { get; set; }
+
+        [JsonPropertyName("modifiedAt")]
+        public DateTime ModifiedAt { get; set; }
+    }
+
     public class GuestDataExtension
     {
         [JsonPropertyName("href")]
