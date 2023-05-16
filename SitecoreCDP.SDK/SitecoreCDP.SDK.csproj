@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title></Title>
-    <Version>1.0.0-alpha3</Version>
+    <Version>1.0.0</Version>
     <Description>The unofficial .NET client SDK for Sitecore CDP</Description>
     <PackageProjectUrl>https://github.com/x3mxray/sitecore-cdp-dotnet-sdk</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>

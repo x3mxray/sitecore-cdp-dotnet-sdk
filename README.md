@@ -39,14 +39,14 @@ var batchRef = await cdpClient.BatchApi.UploadJson("import.json");
 var status = await cdpClient.BatchApi.CheckStatus(batchRef);
 if (status.Status.Code == BatchStatusCode.Error)
 {
-	// download log and extract error records
+    // download log and extract error records
     var logRecords = await cdpClient.BatchApi.DownloadBatchLog(status.Status.LogUri);
     var errorRecords = logRecords.Where(x => x.Code != 200);
 }
 ```
 
 ## Available services
-At this moment *Batch API*, *Interactive API* and *Audience Sync* are ready. *Stream API* and *Tenant API* are in progress.
+At this moment **Batch API**, **Interactive API** and **Audience Sync** are ready. *Stream API* and *Tenant API* are in progress.
 
 ### Batch API
 Batch API is used to upload guests, orders, and tracking events. The are 3 types of supported import formats:
@@ -73,7 +73,7 @@ var batchRef = await cdpClient.BatchApi.UploadJson(jsonFileBytes);
 var batchRef = await cdpClient.BatchApi.UploadGZip("import.json.gz");
 
 // by file stream 
-var batchRef = await cdpClient.BatchApi.UploadJson(gzFileBytes);
+var batchRef = await cdpClient.BatchApi.UploadGZip(gzFileBytes);
 ```
 Check batch import status and download error log in strongly typed records:
 ```c#
@@ -81,7 +81,7 @@ Check batch import status and download error log in strongly typed records:
 var status = await cdpClient.BatchApi.CheckStatus(batchRef);
 if (status.Status.Code == BatchStatusCode.Error)
 {
-	// download log and extract error records
+    // download log and extract error records
     var logRecords = await cdpClient.BatchApi.DownloadBatchLog(status.Status.LogUri);
     var errorRecords = logRecords.Where(x => x.Code != 200);
 }
@@ -92,35 +92,154 @@ AudienceSync REST API to trigger and retrieve batch jobs, download output files.
 ```c#
 var triggerResponse = await cdpClient.AudienceSyncApi.Trigger(flowRef, segmentRef, datasetDate);
 
-var jobStatus = await cdpClient.AudienceSyncApi.CheckStatus(triggerResponse.Ref);
-if (jobStatus.Status == TriggerResponseStatus.Success)
+// get batch job and check status
+var jobStatus = await cdpClient.AudienceSyncApi.GetBatchJob(triggerResponse.Ref);
+if (jobStatus.Status == AudienceSyncJobStatus.Success)
 {
-    await cdpClient.AudienceSyncApi.GetOutputFiles(triggerResponse.Ref, "outputFiles.gz");
+    // get file urls
+    var outputFiles = await _cdpClient.AudienceSyncApi.GetOutputFiles(triggerResponse.Ref);
+    foreach (var fileUrl in outputFiles.SignedUrls)
+    {
+        // do something
+    }
+	
+	// or download files
+	var outputFiles = await _cdpClient.AudienceSyncApi.GetOutputFiles(triggerResponse.Ref, "outputFiles.gz");
+	// if there is nore than one file, they will be saved as outputFiles_0.gz, outputFiles_1.gz, etc.
+}
+
+
+// get batch jobs from Flow:
+var jobs = await _cdpClient.AudienceSyncApi.GetBatchJobs(flowRef);
+foreach (var job in jobs.Items)
+{
+    if (job.Status == AudienceSyncJobStatus.Success)
+    {
+        // do something
+    }
 }
 ```
 
 ### Interactive API (REST)
 - Guest API:  `cdpClient.InteractiveApi.Guests`
-- Guest Data extensions API: `cdpClient.InteractiveApi.GuestExtensions`
-- Orders API: `cdpClient.InteractiveApi.Orders`
-- OrderItems API: `cdpClient.InteractiveApi.OrderItems`
+```c#
+// create guest:
+var newGuest = new GuestCreate
+{
+    Email = "x3m.xray@gmail.com",
+    FirstName = "Sergey",
+    LastName = "Baranov",
+    Gender = Gender.Male,
+    PhoneNumbers = new List<string> { "+99988877766" },
+	...
+    Identifiers = new List<Identifier>
+    {
+        new Identifier { Provider = "email", Id = "x3m.xray@gmail.com" },
+		new Identifier { Provider = "CMS_ID", Id = "12345" },
+    }
+};
+var result = await _cdpClient.InteractiveApi.Guests.Create(newGuest);
+
+// update guest:
+newGuest.DateOfBirth = new DateTime(1986,5,25);
+var updateResult = await _cdpClient.InteractiveApi.Guests.Update(result.Ref, newGuest);
+
+// find guest with context (extensions and orders) by identifier:
+var user = await _cdpClient.InteractiveApi.Guests.FindByIdentifier(identityProvider: "CMS_ID", identityValue: "12345");
+
+// find guest with context by parameter:
+var guests =  await _cdpClient.InteractiveApi.Guests.FindByParameter(GuestParameter.email, "x3m.xray@gmail.com").ToListAsync();
+var me = guests.First();
+
+// Get guest context by guestRef:
+var guest = await _cdpClient.InteractiveApi.Guests.GetContext(me.Ref);
+```
+
+- Guest Data extensions API: `cdpClient.InteractiveApi.GuestExtensions`:
+```c#
+// create custom guest data extension:
+public class DemoExt : DataExtension
+{
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
+	
+    [JsonPropertyName("logic")]
+    public bool Logic { get; set; }
+	
+    [JsonPropertyName("number")]
+    public int Number { get; set; }
+}
+
+// populate values
+var dataExt = new DemoExt
+{
+    Key = "demo",
+    Text = "lorem ipsum",
+    Logic = true,
+    Number = 456
+};
+var result = await _cdpClient.InteractiveApi.GuestExtensions.CreateOrUpdate(guestRef, "custom", dataExt);
+
+// get extension items by extension name	
+var ext = await _cdpClient.InteractiveApi.GuestExtensions.Get(guestRef, "custom");
+var items = ext.Items;
+
+// get extension item by extension name and extension itemRef
+var ext = await _cdpClient.InteractiveApi.GuestExtensions.Get(guestRef, "custom", extensionItemRef);
+Dictionary<string, dynamic> items = ext.Values;
+
+// delete extension
+await _cdpClient.InteractiveApi.GuestExtensions.Delete(guestRef, "custom");
+```
+
+- Orders API: `cdpClient.InteractiveApi.Orders`:
+```c#
+// get order by orderRef:
+var order = await _cdpClient.InteractiveApi.Orders.Get(orderRef);
+
+// get guest orders:
+var orders = await _cdpClient.InteractiveApi.Orders.Find(guestRef).ToListAsync();
+foreach (var order in orders)
+{
+    // access to order items, contacts, payment, etc.
+}
+```
+
+- OrderItems API: `cdpClient.InteractiveApi.OrderItems`:
+```c#
+// get all order items by orderRef:
+var orderItems = await _cdpClient.InteractiveApi.OrderItems.Find(orderRef).ToListAsync();
+foreach (var item in orderItems)
+{
+    // access to order item fields
+}
+
+// get single order item:
+var orderItem = await _cdpClient.InteractiveApi.OrderItems.Get(item.Ref);
+
+// delete order item:
+await _cdpClient.InteractiveApi.OrderItems.Delete(item.Ref);
+```
 
 ### Stream API
 In progress.
-```c#
-await cdpClient.StreamApi.RunExperiment(friendlyId);
-await cdpClient.StreamApi.IdentifyUser(new IdentityEvent{});
-await cdpClient.StreamApi.TrackEvent(new Event{});
-await cdpClient.StreamApi.CreateNewSession();
-await cdpClient.StreamApi.AbandonSession();
-```
+
 ### Tenant API
 In progress.
 
 ## FAQ
 
-#### Do I have to use `async`/`await` when calling endpoints?
-Yes. The SDK uses `HttpClient`, which does not support synchronous calls (and for good reason). Do _not_ use `.Result` or `.Wait()` on calls made with this SDK, ever. These will block threads and potentially cause deadlocks. In short, [don't block on async code](https://blog.stephencleary.com/2012/07/dont-block-on-async-code.html). Use `await`.
+#### Does it support`async`/`await`?
+Yes. 
+
+#### Does it use 3rd party http client when calling endpoints?
+No, default `HttpClient` is used. 
+
+#### Any references to libraries that versions should be taken into account *(like Newtonsoft.Json)*?
+No.
+
+#### Is SKD covered by test?
+Yes and no :) For each new API/endpoint a test is written, but it is still local, because you need a tenant to run them.  I'm not posting them publicly yet.
 
 ## Supported Platforms
 The SDK is available with .NET 7.0, .NET Framework 4.6.x and .NET Standard 2.x that makes it compatible with almost all .NET solutions.

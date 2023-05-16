@@ -5,6 +5,8 @@
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
 
+using SitecoreCDP.SDK.Models.Interactive;
+
 namespace SitecoreCDP.SDK.Configuration
 {
     /// <summary>
@@ -22,9 +24,10 @@ namespace SitecoreCDP.SDK.Configuration
                 public static string GetContext(string guestRef) =>
                     $"{BaseUrl}/{Version}/guestContexts/{guestRef}?expand=items.orders(offset:0,limit:100)&source=all&timeout=30000";
 
-                public static string Find(string email) =>
-                    $"{BaseUrl}/{Version}/guests?email={email}&identifiers.provider=email&identifiers.id={email}";
-
+                public static string FindByParameter(GuestParameter parameter, string value) =>
+                    $"{BaseUrl}/{Version}/guests?{parameter}={value}";
+                public static string FindByIdentifier(string provider, string value) =>
+                    $"{BaseUrl}/{Version}/guests?identifiers.provider={provider}&identifiers.id={value}";
                 public static string Get(string guestRef) => $"{BaseUrl}/{Version}/guests/{guestRef}";
                 public static string Create => $"{BaseUrl}/{Version}/guests";
                 public static string Update(string guestRef) => $"{BaseUrl}/{Version}/guests/{guestRef}";
@@ -41,8 +44,8 @@ namespace SitecoreCDP.SDK.Configuration
                 public static string Get(string guestRef, string extName, string guestExtensionRef) =>
                     $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}/{guestExtensionRef}";
 
-                public static string Delete(string guestRef, string extName, string guestExtRef) =>
-                    $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}/{guestExtRef}";
+                public static string Delete(string guestRef, string extName) =>
+                    $"{BaseUrl}/{Version}/guests/{guestRef}/ext{extName}";
             }
 
             public static class Order
@@ -71,10 +74,12 @@ namespace SitecoreCDP.SDK.Configuration
         public static class AudienceSync
         {
             public static string Trigger => $"{BaseUrl}/{Version}/batchFlowsTrigger";
-            public static string Status(string batchJobRef) => $"{BaseUrl}/{Version}/batchFlowsJob/{batchJobRef}";
+            public static string GetJob(string batchJobRef) => $"{BaseUrl}/{Version}/batchFlowsJob/{batchJobRef}";
 
-            public static string GetFiles(string batchJobRef) =>
-                $"{BaseUrl}/{Version}/batchFlowsJob/{batchJobRef}/files";
+            public static string GetFiles(string batchJobRef) => $"{BaseUrl}/{Version}/batchFlowOutput/{batchJobRef}/files";
+
+            public static string GetJobs(string flowRef) => $"{BaseUrl}/{Version}/batchFlowsJob/?flowRef={flowRef}&expand=true";
+
         }
 
         public static class Stream

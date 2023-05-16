@@ -22,7 +22,7 @@ using OrderItem = SitecoreCDP.SDK.Models.Interactive.OrderItem;
 namespace SitecoreCDP.SDK.Services
 {
 
-    internal class InteractiveApiService: BaseService, IInteractiveApiService
+    internal class InteractiveApiService : BaseService, IInteractiveApiService
     {
         public InteractiveApiGuestService Guests { get; }
         public InteractiveApiGuestExtensionsService GuestExtensions { get; }
@@ -60,9 +60,9 @@ namespace SitecoreCDP.SDK.Services
             }
         }
 
-        public async Task<OrderItem> Get(string orderRef)
+        public async Task<OrderItem> Get(string orderItemRef)
         {
-            var uri = new Uri(Endpoints.Interactive.OrderItem.Get(orderRef));
+            var uri = new Uri(Endpoints.Interactive.OrderItem.Get(orderItemRef));
             var result = await _httpClient.GetAsync(uri);
             return await GetCdpResponse<OrderItem>(result);
         }
@@ -71,6 +71,16 @@ namespace SitecoreCDP.SDK.Services
         {
             var uri = new Uri(Endpoints.Interactive.OrderItem.Delete(orderItemRef));
             var result = await _httpClient.DeleteAsync(uri);
+            return await GetCdpResponse<OrderItem>(result);
+        }
+
+        public async Task<OrderItem> Update(string orderItemRef, OrderItem item)
+        {
+            var uri = new Uri(Endpoints.Interactive.OrderItem.Update(orderItemRef));
+            var textContent = JsonSerializer.Serialize(item);
+            using var content = new StringContent(textContent);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var result = await _httpClient.PostAsync(uri, content);
             return await GetCdpResponse<OrderItem>(result);
         }
     }
@@ -107,11 +117,11 @@ namespace SitecoreCDP.SDK.Services
         }
     }
 
-    
 
-    public class InteractiveApiGuestService: BaseService, IInteractiveApiGuestService
+
+    public class InteractiveApiGuestService : BaseService, IInteractiveApiGuestService
     {
-       
+
         public InteractiveApiGuestService(CdpClientConfig cdpClientConfig) : base(cdpClientConfig)
         {
         }
@@ -136,19 +146,53 @@ namespace SitecoreCDP.SDK.Services
             return await GetCdpResponse<Guest>(result);
         }
 
-        public async Task<GuestContext> Find(string email)
+        public async IAsyncEnumerable<GuestContext> FindByParameter(GuestParameter parameter, string value)
         {
-            var uri = new Uri(Endpoints.Interactive.Guest.Find(email));
+            var uri = new Uri(Endpoints.Interactive.Guest.FindByParameter(parameter, value));
             var result = await _httpClient.GetAsync(uri);
             var response = await result.Content.ReadAsStringAsync();
-            if (result.IsSuccessStatusCode)
-            {
-                var obj = JsonSerializer.Deserialize<FindResponse>(response);
-                var href = obj.Items[0].Href.Split('/').Last();
-                return await GetContext(href);
-            }
+            if (!result.IsSuccessStatusCode)
+                throw CdpException(response);
 
-            throw CdpException(response);
+            var obj = JsonSerializer.Deserialize<FindResponse>(response);
+
+            foreach (var order in obj.Items)
+            {
+                var href = order.Href.Split('/').Last();
+                yield return await GetContext(href);
+            }
+        }
+
+        public async Task<GuestContext> FindFirstByParameter(GuestParameter parameter, string value)
+        {
+            var uri = new Uri(Endpoints.Interactive.Guest.FindByParameter(parameter, value));
+            var result = await _httpClient.GetAsync(uri);
+            var response = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+                throw CdpException(response);
+
+            var obj = JsonSerializer.Deserialize<FindResponse>(response);
+            if (obj== null || !obj.Items.Any())
+                return null;
+
+            var href = obj.Items[0].Href.Split('/').Last();
+            return await GetContext(href);
+        }
+
+        public async Task<GuestContext> FindByIdentifier(string identityProvider, string identityValue)
+        {
+            var uri = new Uri(Endpoints.Interactive.Guest.FindByIdentifier(identityProvider, identityValue));
+            var result = await _httpClient.GetAsync(uri);
+            var response = await result.Content.ReadAsStringAsync();
+            if (!result.IsSuccessStatusCode)
+                throw CdpException(response);
+
+            var obj = JsonSerializer.Deserialize<FindResponse>(response);
+            if (obj == null || !obj.Items.Any())
+                return null;
+
+            var href = obj.Items[0].Href.Split('/').Last();
+            return await GetContext(href);
         }
 
         public async Task<GuestContext> GetContext(string guestRef)
@@ -164,5 +208,5 @@ namespace SitecoreCDP.SDK.Services
             return await GetCdpResponse<Guest>(result);
         }
     }
-    
+
 }

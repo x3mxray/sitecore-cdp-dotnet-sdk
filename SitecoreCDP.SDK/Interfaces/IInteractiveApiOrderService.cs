@@ -23,7 +23,7 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <returns></returns>
         IAsyncEnumerable<Order> Find(string guestRef);
         /// <summary>
-        /// Find the order reference
+        /// Get the order reference
         /// </summary>
         /// <param name="orderRef">The reference of the order.</param>
         /// <returns></returns>

@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Models.Interactive;
+using System.Xml.Linq;
 
 namespace SitecoreCDP.SDK.Services
 {
@@ -18,7 +19,13 @@ namespace SitecoreCDP.SDK.Services
         {
         }
 
-        public async Task<FindResponse> Find(string guestRef, string extName)
+        public async Task Delete(string guestRef, string extName)
+        {
+            var uri = new Uri(Endpoints.Interactive.GuestExtensions.Delete(guestRef, extName));
+            var result = await _httpClient.DeleteAsync(uri);
+            await GetCdpResponse<FindResponse>(result);
+        }
+        public async Task<FindResponse> Get(string guestRef, string extName)
         {
             var uri = new Uri(Endpoints.Interactive.GuestExtensions.Find(guestRef, extName));
             var result = await _httpClient.GetAsync(uri);

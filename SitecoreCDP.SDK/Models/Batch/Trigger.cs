@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SitecoreCDP.SDK.Models.Common;
 
 namespace SitecoreCDP.SDK.Models.Batch
 {
@@ -10,10 +12,21 @@ namespace SitecoreCDP.SDK.Models.Batch
         public string datasetDate { get; set; }
     }
 
-    public class TriggerResponse
+    public class BatchJobs: Hreference
     {
-        [JsonPropertyName("href")]
-        public string Href { get; set; }
+        [JsonPropertyName("first")]
+        public Hreference First { get; set; }
+
+        [JsonPropertyName("next")]
+        public Hreference Next { get; set; }
+
+        [JsonPropertyName("items")]
+        public List<BatchJob> Items { get; set; }
+
+    }
+
+    public class BatchJob : Hreference
+    {
         [JsonPropertyName("ref")]
         public string Ref { get; set; }
         [JsonPropertyName("flowRef")]

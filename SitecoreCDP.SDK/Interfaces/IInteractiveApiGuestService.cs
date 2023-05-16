@@ -5,6 +5,7 @@
 // <project>SitecoreCDP.SDK</project>
 // <date>2023-5-4</date>
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SitecoreCDP.SDK.Models.Interactive;
 
@@ -13,7 +14,7 @@ namespace SitecoreCDP.SDK.Interfaces
     /// <summary>
     /// Guest service
     /// </summary>
-    interface IInteractiveApiGuestService
+    public interface IInteractiveApiGuestService
     {
         /// <summary>
         /// Retrieves the guest record.
@@ -27,12 +28,28 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="guestRef">The reference of the guest record.</param>
         /// <returns></returns>
         Task<GuestContext> GetContext(string guestRef);
+
         /// <summary>
-        /// Find guest by email and retrieve full information about guest (including orders, events, etc.)
+        /// Get guests by parameter (email, phoneNumber, firstName, lastName) and retrieve full information about guest.
         /// </summary>
-        /// <param name="email">Guest email address</param>
+        /// <param name="parameter">Guest parameter (field name).</param>
+        /// <param name="value">Parameter value</param>
         /// <returns></returns>
-        Task<GuestContext> Find(string email);
+        IAsyncEnumerable<GuestContext> FindByParameter(GuestParameter parameter, string value);
+       
+        /// <summary>
+        /// Get first guest that matches parameter criteria (email, phoneNumber, firstName, lastName) and retrieve full information about guest.
+        /// </summary>
+        /// <param name="parameter">Guest parameter (field name).</param>
+        /// <param name="value">Parameter value</param>
+        Task<GuestContext> FindFirstByParameter(GuestParameter parameter, string value);
+
+        /// <summary>
+        /// Get guest by identifier.
+        /// </summary>
+        /// <param name="identityProvider">Identity provider name (field name).</param>
+        /// <param name="identityValue">Identity value</param>
+        Task<GuestContext> FindByIdentifier(string identityProvider, string identityValue);
         /// <summary>
         /// Creates a guest.
         /// </summary>

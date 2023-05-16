@@ -22,31 +22,26 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="flowRef">Reference of the audience sync.</param>
         /// <param name="segmentRef">Reference of the segment that is being used.</param>
         /// <param name="datasetDate">The dataset date of the segment build.</param>
-        Task<TriggerResponse> Trigger(string flowRef, string segmentRef, DateTime datasetDate);
+        Task<BatchJob> Trigger(string flowRef, string segmentRef, DateTime datasetDate);
 
         /// <summary>
-        /// Check audience sync status.
+        /// Retrieve batch job with status.
         /// </summary>
-        /// <param name="batchJobRef">Ref field of TriggerResponse.</param>
+        /// <param name="batchJobRef">Ref field of BatchJob.</param>
         /// <returns></returns>
-        Task<TriggerResponse> CheckStatus(string batchJobRef);
+        Task<BatchJob> GetBatchJob(string batchJobRef);
+
         /// <summary>
-        /// Retrieves a list of batch jobs for a flow. You must include the flow reference as a query string parameter in the URI of the request.
+        /// Retrieves a list of batch jobs for a flow.
         /// </summary>
         /// <param name="flowRef">The flow reference.</param>
-        void GetBatchJobs(string flowRef);
+        Task<BatchJobs> GetBatchJobs(string flowRef);
 
         /// <summary>
-        /// Retrieves a batch job for a flow.
+        /// Retrieves signed URLs for a batch job, download files if needed. 
         /// </summary>
         /// <param name="batchJobRef">The reference of the batch job.</param>
-        void GetBatchJob(string batchJobRef);
-
-        /// <summary>
-        /// Retrieves signed URLs for a batch job, download and parse files. 
-        /// </summary>
-        /// <param name="batchJobRef">The reference of the batch job.</param>
-        /// <param name="tempGzipName">Path to downloaded gzip file.</param>
-        Task GetOutputFiles(string batchJobRef, string tempGzipName);
+        /// <param name="downloadFileName">Path to downloaded file (default is null - without downloading). If there are more than one file, all will be downloaded with postfix _{index}</param>
+        Task<OutputFilesResponse> GetOutputFiles(string batchJobRef, string downloadFileName=null);
     }
 }

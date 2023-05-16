@@ -17,11 +17,11 @@ namespace SitecoreCDP.SDK.Interfaces
     interface IInteractiveApiOrderItemService
     {
         /// <summary>
-        /// Retrieves a list of order items for an order.
+        /// Get an order item object.
         /// </summary>
-        /// <param name="orderRef">The reference of the order.</param>
+        /// <param name="orderItemRef">The reference of the order item.</param>
         /// <returns></returns>
-        Task<OrderItem> Get(string orderRef);
+        Task<OrderItem> Get(string orderItemRef);
         /// <summary>
         /// Retrieves an order.
         /// </summary>
@@ -34,5 +34,13 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="orderItemRef">The reference of the order item.</param>
         /// <returns></returns>
         Task<OrderItem> Delete(string orderItemRef);
+
+        /// <summary>
+        /// Update an order item object.
+        /// </summary>
+        /// <param name="orderItemRef">The reference of the order item.</param>
+        /// <param name="orderItem">Order item model.</param>
+        /// <returns></returns>
+        Task<OrderItem> Update(string orderItemRef, OrderItem orderItem);
     }
 }

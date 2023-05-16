@@ -15,6 +15,8 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Unicode;
+using System.Threading;
+using System.Threading.Tasks;
 //using Bogus;
 //using Bogus.DataSets;
 //using static Bogus.DataSets.Name;
@@ -162,6 +164,16 @@ namespace SitecoreCDP.SDK
                 }
             }
             return JsonSerializer.Serialize(list, serializerOptions);
+        }
+
+        public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items,
+            CancellationToken cancellationToken = default)
+        {
+            var results = new List<T>();
+            await foreach (var item in items.WithCancellation(cancellationToken)
+                               .ConfigureAwait(false))
+                results.Add(item);
+            return results;
         }
     }
 }
