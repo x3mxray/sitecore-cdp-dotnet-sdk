@@ -15,10 +15,10 @@ namespace SitecoreCDP.SDK.Interfaces
     /// <summary>Batch Import service</summary>
     public interface IBatchApiService
     {
-        /// <summary>Prepare and upload the gzipped batch file.</summary>
+        /// <summary>Prepare and upload the gzipped batch file from model.</summary>
         /// <param name="batches">Collection of batch entities to upload.</param>
-        /// <param name="tempJsonFileName">Path to temporary json file.</param>
-        Task<string> Upload(List<Batch> batches, string tempJsonFileName);
+        /// <param name="tempJsonFileName">Path to temporary json file (if you need to save it), default is null (in memory).</param>
+        Task<string> Upload(List<Batch> batches, string tempJsonFileName=null);
 
         /// <summary>
         /// Prepare and upload the gzipped batch file.

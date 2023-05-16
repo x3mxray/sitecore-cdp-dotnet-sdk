@@ -112,10 +112,10 @@ namespace SitecoreCDP.SDK.Services
             }
             return uniqueId;
         }
-        public async Task<string> UploadJson(byte[] jsonFile)
+        public async Task<string> UploadJson(byte[] jsonFileBytes)
         {
             string uniqueId = Guid.NewGuid().ToString();
-            var gzip = Helpers.CompressFile(jsonFile);
+            var gzip = Helpers.CompressFile(jsonFileBytes);
             var md5 = Helpers.Md5Hash(gzip);
 
             PreSignRequest request = new PreSignRequest()
@@ -200,51 +200,14 @@ namespace SitecoreCDP.SDK.Services
 
         public async Task<string> Upload(List<Batch> batches, string tempJsonfileName)
         {
-            string uniqueId = Guid.NewGuid().ToString();
             var jsonName = tempJsonfileName;
 
-            Helpers.ExportToJson(jsonName, batches);
+            var bytes = !string.IsNullOrEmpty(tempJsonfileName)
+                ? batches.ExportToBatchJsonFile(jsonName)
+                : batches.ExportToBatchFile();
 
 
-            var gzip = Helpers.CompressFile(jsonName);
-            var md5 = Helpers.Md5Hash(gzip);
-
-            PreSignRequest request = new PreSignRequest()
-            {
-                checksum = Helpers.CheckSum(md5),
-                size = new FileInfo(gzip).Length
-            };
-
-            var textContent = JsonSerializer.Serialize(request);
-            using var content = new StringContent(textContent);
-            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-
-            var uri = new Uri(Endpoints.Batch.PresignedRequest(uniqueId));
-            var result = await _httpClient.PutAsync(uri, content);
-            var response = await GetCdpResponse<PreSignResponse>(result);
-            if (!string.IsNullOrEmpty(response.Location.Href))
-            {
-                HttpClient client = new HttpClient();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Put, new Uri(response.Location.Href));
-
-                requestMessage.Headers.Add("x-amz-server-side-encryption", "AES256");
-
-                requestMessage.Content = new ByteArrayContent(File.ReadAllBytes(gzip));
-                requestMessage.Content.Headers.ContentMD5 = md5;
-
-                HttpResponseMessage responseMessage = await client.SendAsync(requestMessage);
-
-                if (!responseMessage.IsSuccessStatusCode)
-                {
-                    var errorMessage = await responseMessage.Content.ReadAsStringAsync();
-                    throw CdpException(errorMessage);
-
-                }
-
-            }
-            return uniqueId;
+            return await UploadJson(bytes);
         }
 
         public async Task<BatchUploadResponse> CheckStatus(string batchRef)

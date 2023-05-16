@@ -11,8 +11,10 @@ using System.IO;
 using System.IO.Compression;
 using System.IO.Pipes;
 using System.Security.Cryptography;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Unicode;
 //using Bogus;
 //using Bogus.DataSets;
 //using static Bogus.DataSets.Name;
@@ -24,6 +26,11 @@ namespace SitecoreCDP.SDK
 {
     public static class Helpers
     {
+        static JsonSerializerOptions serializerOptions = new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+        };
+
         public static byte[] Md5Hash(byte[] file)
         {
             using var md5 = MD5.Create();
@@ -96,20 +103,65 @@ namespace SitecoreCDP.SDK
             return memory.ToArray();
         }
 
-        public static void ExportToJson(string fileName, List<Batch> batches)
+        public static byte[] ExportToBatchJsonFile(this List<Batch> batches, string fileName)
         {
-            using var file = File.CreateText(fileName);
+            using (var file = File.CreateText(fileName))
+            {
+                foreach (var batch in batches)
+                {
+                    if (batch is BatchGuest guest)
+                    {
+                        file.WriteLine(JsonSerializer.Serialize<BatchGuest>(guest, serializerOptions));
+                    }
+                    else if (batch is BatchOrder order)
+                    {
+                        file.WriteLine(JsonSerializer.Serialize<BatchOrder>(order, serializerOptions));
+                    }
+                }
+            }
+
+            return File.ReadAllBytes(fileName);
+        }
+
+        public static byte[] ExportToBatchFile(this List<Batch> batches)
+        {
+            using (var ms = new MemoryStream())
+            {
+                using (TextWriter tw = new StreamWriter(ms))
+                {
+                    foreach (var batch in batches)
+                    {
+                        if (batch is BatchGuest guest)
+                        {
+                            tw.WriteLine(JsonSerializer.Serialize<BatchGuest>(guest, serializerOptions));
+                        }
+                        else if (batch is BatchOrder order)
+                        {
+                            tw.WriteLine(JsonSerializer.Serialize<BatchOrder>(order, serializerOptions));
+                        }
+                    }
+                    tw.Flush();
+                    ms.Position = 0;
+                    return ms.ToArray();
+                }
+            }
+        }
+
+        public static string ToValidJson(this List<Batch> batches)
+        {
+            var list = new List<dynamic>();
             foreach (var batch in batches)
             {
                 if (batch is BatchGuest guest)
                 {
-                    file.WriteLine(JsonSerializer.Serialize<BatchGuest>(guest));
+                    list.Add((BatchGuest) guest);
                 }
                 else if (batch is BatchOrder order)
                 {
-                    file.WriteLine(JsonSerializer.Serialize<BatchOrder>(order));
+                    list.Add((BatchOrder)order);
                 }
             }
+            return JsonSerializer.Serialize(list, serializerOptions);
         }
     }
 }

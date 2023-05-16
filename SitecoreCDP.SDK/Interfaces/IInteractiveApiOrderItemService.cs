@@ -28,5 +28,11 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="orderRef">The reference of the order.</param>
         /// <returns></returns>
         IAsyncEnumerable<OrderItem> Find(string orderRef);
+        /// <summary>
+        /// Delete an order item.
+        /// </summary>
+        /// <param name="orderItemRef">The reference of the order item.</param>
+        /// <returns></returns>
+        Task<OrderItem> Delete(string orderItemRef);
     }
 }

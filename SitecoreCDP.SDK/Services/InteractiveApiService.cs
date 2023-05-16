@@ -66,6 +66,13 @@ namespace SitecoreCDP.SDK.Services
             var result = await _httpClient.GetAsync(uri);
             return await GetCdpResponse<OrderItem>(result);
         }
+
+        public async Task<OrderItem> Delete(string orderItemRef)
+        {
+            var uri = new Uri(Endpoints.Interactive.OrderItem.Delete(orderItemRef));
+            var result = await _httpClient.DeleteAsync(uri);
+            return await GetCdpResponse<OrderItem>(result);
+        }
     }
 
 
