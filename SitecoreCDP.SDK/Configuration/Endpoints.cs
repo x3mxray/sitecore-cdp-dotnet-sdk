@@ -86,5 +86,29 @@ namespace SitecoreCDP.SDK.Configuration
         {
 
         }
+
+        public static class Tenant
+        {
+            public static string Configuration => $"{BaseUrl}/{Version}/configurations";
+            public static string PointOfSale => $"{BaseUrl}/{Version}/tenants/points-of-sale";
+            public static string IdentityRules => $"{BaseUrl}/{Version}/tenants/identity-rules";
+            public static class Connections
+            {
+                public static string Get(string connectionRef) => $"{BaseUrl}/{Version}/connections/{connectionRef}";
+                public static string Create => $"{BaseUrl}/{Version}/connections";
+            }
+
+            public static class Segments
+            {
+                public static string Get(string segmentRef) => $"{BaseUrl}/v4/segmentDefinitions/{segmentRef}";
+                public static string GetAll => $"{BaseUrl}/v4/segmentDefinitions";
+            }
+
+            public static class Users
+            {
+                public static string Get(string userRef) => $"{BaseUrl}/{Version}/users/{userRef}";
+                public static string GetAll(int limit, int offset) => $"{BaseUrl}/{Version}/users?limit={limit}&offset={offset}";
+            }
+        }
     }
 }
