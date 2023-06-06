@@ -225,7 +225,52 @@ await _cdpClient.InteractiveApi.OrderItems.Delete(item.Ref);
 In progress.
 
 ### Tenant API
-In progress.
+- Settings and configurations:
+```
+// get tenant settings and configurations:
+TenantConfiguration config = await _cdpClient.TenantApi.GetConfiguration();
+
+// get tenant point of sales list:
+List<PointOfSale> pos = await _cdpClient.TenantApi.GetPointOfSales();
+
+// get tenant Identity rules:
+List<IdentityRules> identityRules = await _cdpClient.TenantApi.GetIdentityRules();
+```
+
+- Connections API:  `cdpClient.TenantApi.Connections`:
+```
+// get connection:
+Connection connection = await _cdpClient.TenantApi.Connections.Get("ee202d47-6bb6-4d4d-84e5-5adcd4d07013");
+ 
+// create connection:
+connection.Name = "new connection";
+var newConnection = await _cdpClient.TenantApi.Connections.Create(connection);
+
+// update connection:
+newConnection.Auth = new Auth { AuthType = "NONE" };
+await _cdpClient.TenantApi.Connections.Update(newConnection);
+```
+
+- Batch Segments API: `cdpClient.TenantApi.BatchSegments`:
+```
+// get by ref:
+var batchSegment = await _cdpClient.TenantApi.BatchSegments.Get("d99c8189-32a2-4549-8193-afc091efd9d2");
+
+// get by friendly name:
+var batchSegment = await _cdpClient.TenantApi.BatchSegments.Get("demo_brimit");
+
+// get all batch segments:
+List<Segment> batchSegments = await _cdpClient.TenantApi.BatchSegments.GetAll();
+```
+
+- Tenant Users API: `cdpClient.TenantApi.Users`
+```
+// get information about tenant user (with roles and permissions):
+User tenantUser = await _cdpClient.TenantApi.Users.Get("e7198a5d-26d2-4420-938f-950c1a487bd1");
+
+// get all tenant users:
+var users = await _cdpClient.TenantApi.Users.GetAll(limit: 100, offset: 0);
+```
 
 ## FAQ
 
@@ -238,7 +283,7 @@ No, default `HttpClient` is used.
 #### Any references to libraries that versions should be taken into account *(like Newtonsoft.Json)*?
 No.
 
-#### Is SKD covered by test?
+#### Is SDK covered by test?
 Yes and no :) For each new API/endpoint a test is written, but it is still local, because you need a tenant to run them.  I'm not posting them publicly yet.
 
 ## Supported Platforms
