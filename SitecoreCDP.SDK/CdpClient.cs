@@ -14,6 +14,7 @@ namespace SitecoreCDP.SDK
 {
     public class CdpClient: ICdpClient
     {
+        public ITenantApiService TenantApi { get; }
         public IAudienceSyncApiService AudienceSyncApi { get; }
         public IBatchApiService BatchApi { get; }
         public IInteractiveApiService InteractiveApi { get; }
@@ -31,6 +32,7 @@ namespace SitecoreCDP.SDK
             BatchApi = new BatchApiService(cdpClientConfig);
             InteractiveApi = new InteractiveApiService(cdpClientConfig);
             StreamApi = new StreamApiService(cdpClientConfig);
+            TenantApi = new TenantApiService(cdpClientConfig);
         }
 
         void TestConfig()

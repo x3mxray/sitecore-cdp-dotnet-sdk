@@ -1,0 +1,8 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// <copyright file="%FileName%" company="Brimit">
+// Copyright (c) %CurrentYear% All Rights Reserved.
+// </copyright>
+// <author>Sergey Baranov @x3mxray</author>
+// <project>SitecoreCDP.SDK</project>
+// <date>%CurrentYear%-%CurrentMonth%-%CurrentDay%</date>
