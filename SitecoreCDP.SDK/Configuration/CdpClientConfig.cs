@@ -24,7 +24,7 @@ namespace SitecoreCDP.SDK.Configuration
         /// <summary>
         /// Base url for all request. Like  "https://api.boxever.com" or "https://api-engage-eu.sitecorecloud.io".
         /// </summary>
-        public string BaseUrl { get; set; } = "https://api.boxever.com";
+        public string BaseUrl { get; set; } // = "https://api.boxever.com";
 
         /// <summary>
         /// API version. Used in all requests, like <BaseUrl>/<Version>/<ApiEndpoint>

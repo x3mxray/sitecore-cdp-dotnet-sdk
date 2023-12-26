@@ -105,6 +105,7 @@ namespace SitecoreCDP.SDK.Models
         [JsonPropertyName("name")] public string Name { get; set; } = "ext";
 
         [JsonPropertyName("key")] public string Key { get; set; } = "default";
+        [JsonPropertyName("loyaltyNumber")] public int LoyaltyNumber { get; set; } = (new Random()).Next(1000,9999);
 
         //[JsonPropertyName("testUser")] public bool TestUser { get; set; } = true;
     }

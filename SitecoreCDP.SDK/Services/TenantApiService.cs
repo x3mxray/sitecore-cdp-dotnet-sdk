@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
@@ -27,6 +30,23 @@ namespace SitecoreCDP.SDK.Services
             var uri = new Uri(Endpoints.Tenant.Configuration);
             var result = await _httpClient.GetAsync(uri);
             return await GetCdpResponse<TenantConfiguration>(result);
+        }
+
+        public async Task<TenantResponse> CreatePointOfSale(PointOfSale pos)
+        {
+            var uri = new Uri(Endpoints.Tenant.PointOfSale);
+            var textContent = JsonSerializer.Serialize(pos);
+            using var content = new StringContent(textContent);
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var result = await _httpClient.PostAsync(uri, content);
+            return await GetCdpResponse<TenantResponse>(result);
+        }
+
+        public async Task<TenantResponse> DeletePointOfSale(string name)
+        {
+            var uri = new Uri(Endpoints.Tenant.PointOfSaleDelete(name));
+            var result = await _httpClient.DeleteAsync(uri);
+            return await GetCdpResponse<TenantResponse>(result);
         }
 
         public async Task<List<PointOfSale>> GetPointOfSales()

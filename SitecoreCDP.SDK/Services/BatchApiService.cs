@@ -203,11 +203,10 @@ namespace SitecoreCDP.SDK.Services
             var jsonName = tempJsonfileName;
 
             var bytes = !string.IsNullOrEmpty(tempJsonfileName)
-                ? batches.ExportToBatchJsonFile(jsonName)
+                ? batches.ExportToBatchGzipFile(jsonName)
                 : batches.ExportToBatchFile();
 
-
-            return await UploadJson(bytes);
+            return await UploadGZip(bytes);
         }
 
         public async Task<BatchUploadResponse> CheckStatus(string batchRef)

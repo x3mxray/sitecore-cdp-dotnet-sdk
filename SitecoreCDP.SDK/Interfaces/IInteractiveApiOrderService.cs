@@ -28,5 +28,11 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="orderRef">The reference of the order.</param>
         /// <returns></returns>
         Task<Order> Get(string orderRef);
+
+        Task<Order> Create(string guestRef, Order order);
+
+        Task<OrderContact> CreateContact(string orderRef, OrderContact contact);
+
+
     }
 }

@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Text.Unicode;
 using System.Threading;
 using System.Threading.Tasks;
@@ -30,7 +31,8 @@ namespace SitecoreCDP.SDK
     {
         static JsonSerializerOptions serializerOptions = new JsonSerializerOptions
         {
-            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All)
+            Encoder = JavaScriptEncoder.Create(UnicodeRanges.All),
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
         };
 
         public static byte[] Md5Hash(byte[] file)
@@ -122,10 +124,34 @@ namespace SitecoreCDP.SDK
                 }
             }
 
-            return File.ReadAllBytes(fileName);
+            // var test = CompressFile(fileName);
+
+			return File.ReadAllBytes(fileName);
         }
 
-        public static byte[] ExportToBatchFile(this List<Batch> batches)
+        public static byte[] ExportToBatchGzipFile(this List<Batch> batches, string fileName)
+        {
+	        using (var file = File.CreateText(fileName))
+	        {
+		        foreach (var batch in batches)
+		        {
+			        if (batch is BatchGuest guest)
+			        {
+				        file.WriteLine(JsonSerializer.Serialize<BatchGuest>(guest, serializerOptions));
+			        }
+			        else if (batch is BatchOrder order)
+			        {
+				        file.WriteLine(JsonSerializer.Serialize<BatchOrder>(order, serializerOptions));
+			        }
+		        }
+	        }
+
+	        var gzip = CompressFile(fileName);
+
+	        return File.ReadAllBytes(gzip);
+        }
+
+		public static byte[] ExportToBatchFile(this List<Batch> batches)
         {
             using (var ms = new MemoryStream())
             {

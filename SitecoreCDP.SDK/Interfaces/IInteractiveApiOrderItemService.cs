@@ -42,5 +42,8 @@ namespace SitecoreCDP.SDK.Interfaces
         /// <param name="orderItem">Order item model.</param>
         /// <returns></returns>
         Task<OrderItem> Update(string orderItemRef, OrderItem orderItem);
+
+        Task<Models.OrderItem> Create(string orderRef, Models.OrderItem item);
+
     }
 }

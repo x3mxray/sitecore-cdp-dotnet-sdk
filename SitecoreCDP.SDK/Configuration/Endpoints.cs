@@ -55,7 +55,12 @@ namespace SitecoreCDP.SDK.Configuration
                 public static string Find(string guestRef) => $"{BaseUrl}/{Version}/orders?guestRef={guestRef}";
             }
 
-            public static class OrderItem
+            public static class OrderContact
+            {
+	            public static string Create(string orderRef) => $"{BaseUrl}/{Version}/orders/{orderRef}/contacts";
+			}
+
+			public static class OrderItem
             {
                 public static string Find(string orderRef) => $"{BaseUrl}/{Version}/orders/{orderRef}/orderItems";
                 public static string Get(string orderItemRef) => $"{BaseUrl}/{Version}/orderItems/{orderItemRef}";
@@ -91,6 +96,7 @@ namespace SitecoreCDP.SDK.Configuration
         {
             public static string Configuration => $"{BaseUrl}/{Version}/configurations";
             public static string PointOfSale => $"{BaseUrl}/{Version}/tenants/points-of-sale";
+            public static string PointOfSaleDelete(string name) => $"{BaseUrl}/{Version}/tenants/points-of-sale/{name}";
             public static string IdentityRules => $"{BaseUrl}/{Version}/tenants/identity-rules";
             public static class Connections
             {

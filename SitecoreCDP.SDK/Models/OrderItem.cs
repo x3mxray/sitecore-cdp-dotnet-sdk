@@ -12,7 +12,7 @@ namespace SitecoreCDP.SDK.Models
 {
     public class OrderItem
     {
-        [JsonPropertyName("type")] public string Type { get; set; } = "STANDART";
+        [JsonPropertyName("type")] public string Type { get; set; } = "OTHER";
 
         [JsonPropertyName("productId")]
         public string ProductId { get; set; }

@@ -44,7 +44,17 @@ namespace SitecoreCDP.SDK.Services
         {
         }
 
-        public async IAsyncEnumerable<OrderItem> Find(string orderRef)
+        public async Task<Models.OrderItem> Create(string orderRef, SitecoreCDP.SDK.Models.OrderItem item)
+        {
+	        var uri = new Uri(Endpoints.Interactive.OrderItem.Create(orderRef));
+	        var textContent = JsonSerializer.Serialize(item);
+	        using var content = new StringContent(textContent);
+	        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+	        var result = await _httpClient.PostAsync(uri, content);
+	        return await GetCdpResponse<Models.OrderItem>(result);
+        }
+
+		public async IAsyncEnumerable<OrderItem> Find(string orderRef)
         {
             var uri = new Uri(Endpoints.Interactive.OrderItem.Find(orderRef));
             var result = _httpClient.GetAsync(uri).Result;
@@ -109,13 +119,32 @@ namespace SitecoreCDP.SDK.Services
             }
         }
 
+        public async Task<Order> Create(string guestRef, Order order)
+        {
+	        var uri = new Uri(Endpoints.Interactive.Order.Create(guestRef));
+	        var textContent = JsonSerializer.Serialize(order);
+	        using var content = new StringContent(textContent);
+	        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+	        var result = await _httpClient.PostAsync(uri, content);
+	        return await GetCdpResponse<Order>(result);
+		}
+
         public async Task<Order> Get(string orderRef)
         {
             var uri = new Uri(Endpoints.Interactive.Order.Get(orderRef));
             var result = await _httpClient.GetAsync(uri);
             return await GetCdpResponse<Order>(result);
         }
-    }
+        public async Task<OrderContact> CreateContact(string orderRef, OrderContact contact)
+        {
+	        var uri = new Uri(Endpoints.Interactive.OrderContact.Create(orderRef));
+	        var textContent = JsonSerializer.Serialize(contact);
+	        using var content = new StringContent(textContent);
+	        content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+	        var result = await _httpClient.PostAsync(uri, content);
+	        return await GetCdpResponse<OrderContact>(result);
+        }
+	}
 
 
 

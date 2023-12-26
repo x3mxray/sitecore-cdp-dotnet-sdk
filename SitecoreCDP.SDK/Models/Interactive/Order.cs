@@ -18,8 +18,10 @@ namespace SitecoreCDP.SDK.Models.Interactive
 
         [JsonPropertyName("ref")]
         public string Ref { get; set; }
+        [JsonPropertyName("referenceId")]
+        public string ReferenceId { get; set; }
 
-        [JsonPropertyName("createdAt")]
+		[JsonPropertyName("createdAt")]
         public DateTime CreatedAt { get; set; }
 
         [JsonPropertyName("modifiedAt")]
@@ -32,7 +34,7 @@ namespace SitecoreCDP.SDK.Models.Interactive
         public string CurrencyCode { get; set; }
 
         [JsonPropertyName("price")]
-        public int Price { get; set; }
+        public decimal Price { get; set; }
 
         [JsonPropertyName("paymentType")]
         public string PaymentType { get; set; }

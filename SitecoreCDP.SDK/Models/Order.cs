@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using SitecoreCDP.SDK.Models.Interactive;
 
 namespace SitecoreCDP.SDK.Models
 {

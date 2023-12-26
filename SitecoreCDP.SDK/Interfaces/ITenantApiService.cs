@@ -40,5 +40,7 @@ namespace SitecoreCDP.SDK.Interfaces
         /// Tenant users service
         /// </summary>
         public UserApiService Users { get; }
+
+        Task<TenantResponse> CreatePointOfSale(PointOfSale pos);
     }
 }
