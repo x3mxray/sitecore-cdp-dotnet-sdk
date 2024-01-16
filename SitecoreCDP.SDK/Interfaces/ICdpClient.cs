@@ -27,6 +27,13 @@ namespace SitecoreCDP.SDK.Interfaces
         /// </summary>
         ITenantApiService TenantApi { get; }
 
-        public IAudienceSyncApiService AudienceSyncApi { get; }
-    }
+		/// <summary>
+		/// Audience sync REST API to retrieve batch jobs.
+		/// </summary>
+		public IAudienceSyncApiService AudienceSyncApi { get; }
+		/// <summary>
+		/// The Audience export REST API lets you access the output of an audience export job.
+		/// </summary>
+		public IAudienceExportApiService AudienceExportApi { get; }
+	}
 }

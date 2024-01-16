@@ -20,7 +20,8 @@ namespace SitecoreCDP.SDK.Services
     public class BaseService
     {
         private readonly CdpClientConfig _cdpClientConfig;
-        public HttpClient _httpClient => new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeader} };
+        public HttpClient _httpClient { get; set; }
+
         public AuthenticationHeaderValue AuthHeader
         {
             get
@@ -30,12 +31,27 @@ namespace SitecoreCDP.SDK.Services
                 return new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
             }
         }
-        public BaseService(CdpClientConfig cdpClientConfig)
+        public AuthenticationHeaderValue AuthHeaderSandboxUser
+        {
+	        get
+	        {
+		        var authenticationString = $"{_cdpClientConfig.ClientKey}:{_cdpClientConfig.ApiToken}";
+		        var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
+		        return new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
+	        }
+        }
+
+        public void UseSandboxAuth()
+        {
+	        _httpClient = new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeaderSandboxUser } };
+		}
+		public BaseService(CdpClientConfig cdpClientConfig)
         {
             _cdpClientConfig = cdpClientConfig;
             Endpoints.BaseUrl = _cdpClientConfig.BaseUrl;
             Endpoints.Version = _cdpClientConfig.Version;
-        }
+            _httpClient = new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeader } };
+		}
 
         ErrorResponse GetErrorResponse(string response)
         {

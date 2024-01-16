@@ -15,23 +15,32 @@ namespace SitecoreCDP.SDK.Interfaces
     /// <summary>Batch Import service</summary>
     public interface IBatchApiService
     {
-        /// <summary>Prepare and upload the gzipped batch file from model.</summary>
+        /// <summary>Prepare and upload the batch file from valid JSON model.</summary>
         /// <param name="batches">Collection of batch entities to upload.</param>
-        /// <param name="tempJsonFileName">Path to temporary json file (if you need to save it), default is null (in memory).</param>
+        /// <param name="tempJsonFileName">Path to temporary json file.</param>
         Task<string> Upload(List<Batch> batches, string tempJsonFileName=null);
 
         /// <summary>
-        /// Prepare and upload the gzipped batch file.
+        /// Prepare and upload .json batch file (file is a list or json lines without separator).
         /// </summary>
         /// <param name="jsonFileName">Path to json file to upload.</param>
         /// <returns></returns>
         Task<string> UploadJson(string jsonFileName);
-        /// <summary>
-        /// Prepare and upload the gzipped batch file.
-        /// </summary>
-        /// <param name="gzipFileBytes">Gzip file in bytes.</param>
-        /// <returns></returns>
-        Task<string> UploadGZip(byte[] gzipFileBytes);
+		/// <summary>
+		/// Prepare and upload .json batch file (file has a valid json format, list or records).
+		/// </summary>
+		/// <param name="validJsonFileName">Path to json file to upload.</param>
+		/// <param name="tempJsonFileName">Path to temporary json file.</param>
+		/// <param name="entity">Type of entities in file, Guest or Order.</param>
+		/// <returns></returns>
+		Task<string> UploadValidJsonFile(string validJsonFileName, string tempJsonFileName,
+	        BatchEntity entity = BatchEntity.Guest);
+		/// <summary>
+		/// Prepare and upload the .gz batch file.
+		/// </summary>
+		/// <param name="gzipFileBytes">Gzip file in bytes.</param>
+		/// <returns></returns>
+		Task<string> UploadGZip(byte[] gzipFileBytes);
         /// <summary>
         /// Prepare and upload the gzipped batch file.
         /// </summary>

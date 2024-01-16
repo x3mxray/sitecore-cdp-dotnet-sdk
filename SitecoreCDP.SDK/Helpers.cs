@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.IO.Pipes;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -192,7 +193,21 @@ namespace SitecoreCDP.SDK
             return JsonSerializer.Serialize(list, serializerOptions);
         }
 
-        public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items,
+        public static List<Batch> FileToJsonModel(this string validJsonFileName, BatchEntity entity=BatchEntity.Guest)
+        {
+	        var json = File.ReadAllText(validJsonFileName);
+	        if (string.IsNullOrEmpty(json))
+		        return new List<Batch>();
+
+			if (entity == BatchEntity.Guest)
+	        {
+		        return JsonSerializer.Deserialize<List<BatchGuest>>(json).Cast<Batch>().ToList();
+			}
+			return JsonSerializer.Deserialize<List<BatchOrder>>(json).Cast<Batch>().ToList();
+		}
+
+     
+		public static async Task<List<T>> ToListAsync<T>(this IAsyncEnumerable<T> items,
             CancellationToken cancellationToken = default)
         {
             var results = new List<T>();

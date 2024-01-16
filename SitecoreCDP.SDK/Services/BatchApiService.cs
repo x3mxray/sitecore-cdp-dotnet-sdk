@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -198,15 +199,22 @@ namespace SitecoreCDP.SDK.Services
             return uniqueId;
         }
 
-        public async Task<string> Upload(List<Batch> batches, string tempJsonfileName)
+        public async Task<string> Upload(List<Batch> batches, string tempJsonFileName)
         {
-            var jsonName = tempJsonfileName;
+            var jsonName = tempJsonFileName;
 
-            var bytes = !string.IsNullOrEmpty(tempJsonfileName)
+            var bytes = !string.IsNullOrEmpty(tempJsonFileName)
                 ? batches.ExportToBatchGzipFile(jsonName)
                 : batches.ExportToBatchFile();
 
             return await UploadGZip(bytes);
+        }
+
+
+        public async Task<string> UploadValidJsonFile(string validJsonFileName, string tempJsonFileName, BatchEntity entity = BatchEntity.Guest)
+        {
+	        var batches = validJsonFileName.FileToJsonModel(entity).ToList();
+	        return await Upload(batches, tempJsonFileName);
         }
 
         public async Task<BatchUploadResponse> CheckStatus(string batchRef)

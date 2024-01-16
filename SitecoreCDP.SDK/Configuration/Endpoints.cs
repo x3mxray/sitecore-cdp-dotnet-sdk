@@ -87,7 +87,14 @@ namespace SitecoreCDP.SDK.Configuration
 
         }
 
-        public static class Stream
+        public static class AudienceExport
+        {
+	        public static string GetLatestExport(string audienceExportRef) => $"{BaseUrl}/{Version}/audienceExports/definitions/{audienceExportRef}/latestExport";
+	        public static string GetFinishedExportJobs(string audienceExportRef) => $"{BaseUrl}/{Version}/audienceExports/definitions/{audienceExportRef}/reports";
+	        public static string GetExportJob(string jobExecutionRef) => $"{BaseUrl}/{Version}/audienceExports/executions/{jobExecutionRef}/export";
+		}
+
+		public static class Stream
         {
 
         }

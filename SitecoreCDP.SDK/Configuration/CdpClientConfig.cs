@@ -32,8 +32,23 @@ namespace SitecoreCDP.SDK.Configuration
         public string Version { get; set; } = "v2";
 
         /// <summary>
-        /// Default (fallback) values for Stream API requests.
+        /// Extended authentification parameters, such as login/password to sandbox, API key, etc.
         /// </summary>
-        public CdpClientBrowserConfig BrowserConfig { get; set; } = null;
+		public CdpAuthentification AuthParams { get; set; }
+
+		/// <summary>
+		/// Default (fallback) values for Stream API requests.
+		/// </summary>
+		public CdpClientBrowserConfig BrowserConfig { get; set; } = null;
     }
+
+    public class CdpAuthentification
+    {
+		public string Username { get; set; }
+		public string Password { get; set; }
+		/// <summary>
+		/// API key for Audience Export
+		/// </summary>
+		public string ApiKey { get; set; }
+	}
 }
