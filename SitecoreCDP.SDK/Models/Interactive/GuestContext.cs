@@ -17,7 +17,10 @@ namespace SitecoreCDP.SDK.Models.Interactive
 
         [JsonPropertyName("dataExtensions")]
         public List<GuestDataExtension> DataExtensions { get; set; }
-    }
+
+        [JsonPropertyName("sessions")]
+        public List<Session> Sessions { get; set; }
+	}
 
     public class OrderContext : Order
     {
