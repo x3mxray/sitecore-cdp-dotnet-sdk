@@ -6,6 +6,7 @@
 // <date>2023-5-4</date>
 
 using System;
+using SitecoreCDP.SDK.Auth;
 using SitecoreCDP.SDK.Configuration;
 using SitecoreCDP.SDK.Interfaces;
 using SitecoreCDP.SDK.Services;
@@ -30,7 +31,7 @@ namespace SitecoreCDP.SDK
             Config = cdpClientConfig;
             TestConfig();
             AudienceSyncApi = new AudienceSyncApiService(cdpClientConfig);
-            AudienceExportApi = new AudienceExportApiService(cdpClientConfig);
+            AudienceExportApi = new AudienceExportApiService(cdpClientConfig, AuthType.CloudUser);
 			BatchApi = new BatchApiService(cdpClientConfig);
             InteractiveApi = new InteractiveApiService(cdpClientConfig);
             StreamApi = new StreamApiService(cdpClientConfig);

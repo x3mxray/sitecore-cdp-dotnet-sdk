@@ -13,6 +13,7 @@ using System.Text;
 using SitecoreCDP.SDK.Models;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SitecoreCDP.SDK.Auth;
 using SitecoreCDP.SDK.Configuration;
 
 namespace SitecoreCDP.SDK.Services
@@ -31,20 +32,16 @@ namespace SitecoreCDP.SDK.Services
                 return new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
             }
         }
-        public AuthenticationHeaderValue AuthHeaderSandboxUser
+
+        public void UseCloudAuth()
         {
-	        get
-	        {
-		        var authenticationString = $"{_cdpClientConfig.ClientKey}:{_cdpClientConfig.ApiToken}";
-		        var base64EncodedAuthenticationString = Convert.ToBase64String(Encoding.ASCII.GetBytes(authenticationString));
-		        return new AuthenticationHeaderValue("Basic", base64EncodedAuthenticationString);
-	        }
+	        _httpClient = new HttpClient(new AuthHeaderHandler(_cdpClientConfig.AuthParams, AuthType.CloudUser));
+		}
+        public void UseApiKeyAuth()
+        {
+	        _httpClient = new HttpClient(new AuthHeaderHandler(_cdpClientConfig.AuthParams, AuthType.ApiKey));
         }
 
-        public void UseSandboxAuth()
-        {
-	        _httpClient = new HttpClient() { DefaultRequestHeaders = { Authorization = AuthHeaderSandboxUser } };
-		}
 		public BaseService(CdpClientConfig cdpClientConfig)
         {
             _cdpClientConfig = cdpClientConfig;

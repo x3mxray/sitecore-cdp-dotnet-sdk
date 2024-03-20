@@ -5,6 +5,7 @@
 // <project>SitecoreCDP.SDK</project>
 // <date>2024-1-16</date>
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using SitecoreCDP.SDK.Models.AudienceExport;
 
@@ -25,12 +26,14 @@ namespace SitecoreCDP.SDK.Interfaces
 		/// Retrieve finished export jobs
 		/// </summary>
 		/// <param name="audienceExportRef">he reference of the audience export.</param>
-		Task<AudienceExportJobFinished> GetFinishedExportJobs(string audienceExportRef);
+		Task<List<AudienceExportJobFinished>> GetFinishedExportJobs(string audienceExportRef);
 
 		/// <summary>
 		/// Retrieve output URLs for an export job
 		/// </summary>
 		/// <param name="jobExecutionRef">The reference of the audience export job.</param>
 		Task<AudienceExportJob> GetExportJob(string jobExecutionRef);
+
+		Task<List<T>> DownloadExportDelta<T>(string uri, string tempGzipName = null);
 	}
 }

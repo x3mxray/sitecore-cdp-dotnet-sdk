@@ -50,5 +50,7 @@ namespace SitecoreCDP.SDK.Configuration
 		/// API key for Audience Export
 		/// </summary>
 		public string ApiKey { get; set; }
+        public string ApiSecret { get; set; }
+		public string AuthUrl { get; set; }
 	}
 }

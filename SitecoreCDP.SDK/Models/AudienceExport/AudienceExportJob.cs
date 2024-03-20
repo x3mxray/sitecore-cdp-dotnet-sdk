@@ -44,5 +44,8 @@ namespace SitecoreCDP.SDK.Models.AudienceExport
 		public string Url { get; set; }
 		[JsonPropertyName("sizeKB")]
 		public int SizeKB { get; set; }
+
+		[JsonPropertyName("deltaAction")]
+		public string DeltaAction { get; set; }
 	}
 }

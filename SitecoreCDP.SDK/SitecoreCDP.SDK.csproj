@@ -5,7 +5,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <Title></Title>
-    <Version>1.0.3</Version>
+    <Version>1.0.5</Version>
     <Description>The unofficial .NET client SDK for Sitecore CDP</Description>
     <PackageProjectUrl>https://github.com/x3mxray/sitecore-cdp-dotnet-sdk</PackageProjectUrl>
     <PackageIcon>logo.png</PackageIcon>
@@ -16,8 +16,9 @@
     <Authors>Sergey Baranov</Authors>
     <Company>Brimit</Company>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Copyright>Copyright (c) 2023</Copyright>
+    <Copyright>Copyright (c) 2023-2024</Copyright>
     <LangVersion>8</LangVersion>
+    <PackageReleaseNotes>- add Audience export</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
